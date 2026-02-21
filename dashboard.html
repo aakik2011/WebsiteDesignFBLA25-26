@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MathFlow — Dashboard</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#6366f1',
+            secondary: '#8b5cf6',
+            accent: '#06b6d4',
+            success: '#10b981',
+            warning: '#f59e0b',
+            error: '#ef4444',
+            bgLight: '#fafafa',
+            cardLight: '#ffffff',
+            bgDark: '#0f0f0f',
+            cardDark: '#1a1a1a',
+            textPrimaryLight: '#111827',
+            textPrimaryDark: '#f9fafb',
+          },
+          borderRadius: { 'card': '8px', 'btn': '6px' }
+        },
+        fontFamily: {
+          sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+          heading: ['Space Grotesk', 'Inter', 'ui-sans-serif']
+        }
+      },
+      safelist: [
+        'bg-primary', 'bg-secondary', 'bg-accent', 'bg-success', 'bg-warning', 'bg-error',
+        'text-primary', 'text-secondary', 'text-accent', 'text-success', 'text-warning', 'text-error',
+        'from-primary', 'to-secondary', 'from-secondary', 'to-accent',
+      ]
+    }
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="antialiased bg-bgLight text-textPrimaryLight" data-theme="light">
+  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:bg-white focus:px-3 focus:py-2 focus:rounded-md">Skip to content</a>
+
+  <!-- Navigation -->
+  <header class="sticky top-0 z-40 backdrop-blur bg-white/80 dark:bg-black/80 border-b border-gray-100 dark:border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center justify-between">
+        <div class="flex items-center gap-4">
+          <a href="index.html" class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-heading font-bold">M</div>
+            <div class="hidden sm:block">
+              <span class="block font-heading text-lg text-gray-900 dark:text-white">MathFlow</span>
+              <span class="text-sm text-gray-500">Design to Learn</span>
+            </div>
+          </a>
+          <nav class="hidden md:flex gap-2 ml-6" aria-label="Primary">
+            <a href="index.html" class="px-3 py-2 text-sm rounded-md text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">Home</a>
+            <a href="schedule.html" class="px-3 py-2 text-sm rounded-md text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">Schedule</a>
+            <a href="ai-tutor.html" class="px-3 py-2 text-sm rounded-md text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">AI Tutor</a>
+            <a href="learn.html" class="px-3 py-2 text-sm rounded-md text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">Learn</a>
+            <a href="resources.html" class="px-3 py-2 text-sm rounded-md text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">Resources</a>
+            <a href="community.html" class="px-3 py-2 text-sm rounded-md text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">Community</a>
+            <a href="dashboard.html" class="px-3 py-2 text-sm rounded-md bg-gray-100 dark:bg-gray-800 text-primary">Dashboard</a>
+          </nav>
+        </div>
+        <div class="flex items-center gap-3">
+          <button id="themeToggle" class="p-2 rounded-md" aria-pressed="false" title="Toggle theme">
+            <svg id="themeIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.66-10.66h-1M4.34 12.34h-1M18.36 18.36l-.7-.7M6.34 6.34l-.7-.7M18.36 5.64l-.7.7M6.34 17.66l-.7.7M12 8a4 4 0 100 8 4 4 0 000-8z" />
+            </svg>
+          </button>
+          <button type="button" id="editProfile" class="flex items-center gap-2 px-3 py-1.5 rounded-btn border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary transition">
+            <span id="userInitials" class="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-secondary text-white text-xs flex items-center justify-center font-semibold">?</span>
+            <span id="profileName" class="hidden sm:block">Student</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main id="main" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Welcome Banner -->
+    <div class="bg-gradient-to-r from-primary via-secondary to-accent rounded-2xl p-8 mb-8 shadow-2xl text-white">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-white/70 text-sm font-medium uppercase tracking-widest mb-1" id="timeGreeting">Good morning</p>
+          <h1 class="text-4xl font-heading font-bold mb-2">Welcome back, <span id="userName">Student</span>!</h1>
+          <p class="text-white/80 text-lg">Here's a snapshot of your learning progress today.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 p-5 group hover:scale-[1.02] transition-all duration-200">
+        <div class="flex items-center justify-between mb-4">
+
+          <span class="text-xs font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">Today</span>
+        </div>
+        <div class="text-3xl font-heading font-bold text-gray-900 dark:text-white mb-1" id="timeDisplay">0.0h</div>
+        <div class="text-sm text-gray-500 dark:text-gray-400">Time Spent</div>
+        <div class="text-xs text-gray-400 mt-0.5">Auto-tracking active time</div>
+      </div>
+
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 p-5 group hover:scale-[1.02] transition-all duration-200">
+        <div class="flex items-center justify-between mb-4">
+
+          <span class="text-xs font-medium text-warning bg-warning/10 px-2 py-0.5 rounded-full">Streak</span>
+        </div>
+        <div class="text-3xl font-heading font-bold text-gray-900 dark:text-white mb-1" id="streakDisplay">0</div>
+        <div class="text-sm text-gray-500 dark:text-gray-400">Day Streak</div>
+        <div class="text-xs text-gray-400 mt-0.5">Keep it going!</div>
+      </div>
+
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 p-5 group hover:scale-[1.02] transition-all duration-200">
+        <div class="flex items-center justify-between mb-4">
+
+          <span class="text-xs font-medium text-accent bg-accent/10 px-2 py-0.5 rounded-full">Total</span>
+        </div>
+        <div class="text-3xl font-heading font-bold text-gray-900 dark:text-white mb-1" id="sessionsDisplay">0</div>
+        <div class="text-sm text-gray-500 dark:text-gray-400">Sessions Done</div>
+        <div class="text-xs text-gray-400 mt-0.5">Study sessions</div>
+      </div>
+
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 p-5 group hover:scale-[1.02] transition-all duration-200">
+        <div class="flex items-center justify-between mb-4">
+
+          <span class="text-xs font-medium text-success bg-success/10 px-2 py-0.5 rounded-full">Points</span>
+        </div>
+        <div class="text-3xl font-heading font-bold text-gray-900 dark:text-white mb-1" id="pointsDisplay">0</div>
+        <div class="text-sm text-gray-500 dark:text-gray-400">Total Points</div>
+        <div class="text-xs text-gray-400 mt-0.5">Earn by learning</div>
+      </div>
+
+    </div>
+
+    <!-- Music Player -->
+    <div class="bg-gradient-to-r from-secondary to-primary rounded-2xl p-6 mb-8 text-white shadow-2xl">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center text-2xl">🎵</div>
+          <div>
+            <h3 class="font-heading font-semibold text-lg">Lofi Study Beats</h3>
+            <p class="text-white/70 text-sm" id="currentTrack">Focus music to help you study</p>
+          </div>
+        </div>
+        <button type="button" id="musicToggle" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/20 hover:bg-white/30 transition font-semibold text-sm">
+          <svg id="musicIcon" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span id="musicStatus">Play</span>
+        </button>
+      </div>
+      <div id="musicPlayer" class="hidden mt-4">
+        <div class="flex items-center gap-3">
+          <svg class="w-4 h-4 text-white/60 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M12 6a7 7 0 010 12M8.464 15.536a5 5 0 010-7.072"/>
+          </svg>
+          <input type="range" id="volumeSlider" min="0" max="100" value="50" class="flex-1 h-1.5 bg-white/30 rounded-full appearance-none cursor-pointer accent-white" aria-label="Volume">
+          <svg class="w-4 h-4 text-white/60 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M12 6v12M8.464 8.464a5 5 0 000 7.072"/>
+          </svg>
+        </div>
+      </div>
+      <audio id="lofiAudio" loop>
+        <source src="https://stream.zeno.fm/f3wvbbqmdg8uv" type="audio/mpeg">
+      </audio>
+    </div>
+
+    <!-- Two Column Layout -->
+    <div class="grid lg:grid-cols-3 gap-6">
+
+      <!-- Left: Actions & Activity -->
+      <div class="lg:col-span-2 space-y-6">
+
+        <!-- Quick Actions -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 p-6">
+          <h2 class="text-lg font-heading font-semibold text-gray-900 dark:text-white mb-5">Quick Actions</h2>
+          <div class="grid sm:grid-cols-2 gap-3">
+
+            <a href="learn.html" class="flex items-center gap-4 p-4 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-primary hover:bg-primary/5 dark:hover:bg-primary/10 transition-all duration-200 group">
+
+              <div>
+                <div class="font-semibold text-gray-900 dark:text-white text-sm">AI Learn</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Generate practice questions</div>
+              </div>
+            </a>
+
+            <a href="schedule.html" class="flex items-center gap-4 p-4 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-secondary hover:bg-secondary/5 dark:hover:bg-secondary/10 transition-all duration-200 group">
+
+              <div>
+                <div class="font-semibold text-gray-900 dark:text-white text-sm">Schedule</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Book study sessions</div>
+              </div>
+            </a>
+
+            <a href="resources.html" class="flex items-center gap-4 p-4 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-success hover:bg-success/5 dark:hover:bg-success/10 transition-all duration-200 group">
+
+              <div>
+                <div class="font-semibold text-gray-900 dark:text-white text-sm">Resources</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Cheat sheets & calculators</div>
+              </div>
+            </a>
+
+            <a href="community.html" class="flex items-center gap-4 p-4 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-warning hover:bg-warning/5 dark:hover:bg-warning/10 transition-all duration-200 group">
+
+              <div>
+                <div class="font-semibold text-gray-900 dark:text-white text-sm">Community</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Connect & get help</div>
+              </div>
+            </a>
+
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 p-6">
+          <h2 class="text-lg font-heading font-semibold text-gray-900 dark:text-white mb-5">Recent Activity</h2>
+          <div id="activityList">
+            <div class="flex flex-col items-center justify-center py-12 text-gray-400">
+              <svg class="w-12 h-12 mb-3 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+              </svg>
+              <p class="text-sm font-medium">No activity yet</p>
+              <p class="text-xs mt-1 opacity-70">Start studying to see your progress here</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right: Profile, Achievements, Settings -->
+      <div class="space-y-6">
+
+        <!-- Profile Card -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 p-6">
+          <div class="flex items-center gap-4 mb-5">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-2xl font-heading font-bold shadow-lg shadow-primary/25">
+              <span id="profileInitials">?</span>
+            </div>
+            <div>
+              <div class="font-heading font-semibold text-lg text-gray-900 dark:text-white" id="profileDisplayName">Student</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">MathFlow Member</div>
+            </div>
+          </div>
+          <button type="button" id="editProfileBtn" class="w-full py-2.5 px-4 rounded-xl border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary dark:hover:border-primary dark:hover:text-primary transition">
+            Edit Profile
+          </button>
+        </div>
+
+        <!-- Achievements -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 p-6">
+          <h3 class="font-heading font-semibold text-gray-900 dark:text-white mb-4">Achievements</h3>
+          <div class="grid grid-cols-3 gap-2">
+            <div class="p-3 rounded-xl bg-warning/10 text-center border border-warning/20">
+              <div class="text-2xl mb-1">🏆</div>
+              <div class="text-xs font-medium text-gray-700 dark:text-gray-300">First Steps</div>
+            </div>
+            <div class="p-3 rounded-xl bg-gray-100 dark:bg-gray-700 text-center opacity-40">
+              <div class="text-2xl mb-1">🔥</div>
+              <div class="text-xs font-medium text-gray-700 dark:text-gray-300">7-Day Streak</div>
+            </div>
+            <div class="p-3 rounded-xl bg-gray-100 dark:bg-gray-700 text-center opacity-40">
+              <div class="text-2xl mb-1">⭐</div>
+              <div class="text-xs font-medium text-gray-700 dark:text-gray-300">100 Points</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 p-6">
+          <h3 class="font-heading font-semibold text-gray-900 dark:text-white mb-4">Settings</h3>
+          <div class="space-y-1">
+            <button type="button" id="resetStats" class="w-full text-left px-3 py-2.5 rounded-xl text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+              Reset Statistics
+            </button>
+            <button type="button" id="clearData" class="w-full text-left px-3 py-2.5 rounded-xl text-sm text-error hover:bg-error/10 transition">
+              Clear All Data
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Edit Profile Modal -->
+  <div id="profileModal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-cardLight dark:bg-cardDark rounded-2xl shadow-2xl p-6 max-w-md w-full">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="text-xl font-heading font-semibold text-gray-900 dark:text-white">Edit Profile</h3>
+        <button type="button" id="cancelProfile" class="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 hover:text-gray-700 transition">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <label for="nameInput" class="block text-sm font-medium mb-1.5 text-gray-700 dark:text-gray-300">Name</label>
+          <input type="text" id="nameInput" placeholder="Enter your name" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition">
+        </div>
+        <div>
+          <label for="initialsInput" class="block text-sm font-medium mb-1.5 text-gray-700 dark:text-gray-300">Initials</label>
+          <input type="text" id="initialsInput" placeholder="e.g., JS" maxlength="2" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition">
+        </div>
+        <div class="flex gap-3 pt-1">
+          <button type="button" id="saveProfile" class="flex-1 py-2.5 bg-gradient-to-r from-primary to-secondary text-white rounded-xl font-semibold hover:opacity-90 transition">
+            Save Changes
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="mt-12 border-t border-gray-100 dark:border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-md bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center font-heading font-bold">M</div>
+        <div>
+          <div class="font-medium text-gray-900 dark:text-white">MathFlow</div>
+          <div class="text-xs text-gray-500">Made by students, for students</div>
+        </div>
+      </div>
+      <div class="text-sm text-gray-500">&copy; <span id="year"></span> MathFlow. All rights reserved.</div>
+      <div class="flex items-center gap-3">
+        <a href="#" class="text-gray-500 text-sm hover:text-primary">Privacy</a>
+        <a href="#" class="text-gray-500 text-sm hover:text-primary">Terms</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="shared.js"></script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ---- Theme Toggle ----
+    const themeToggle = document.getElementById('themeToggle');
+    const htmlEl = document.documentElement;
+    const bodyEl = document.body;
+    let theme = localStorage.getItem('mf_theme') || 'light';
+
+    function setTheme(t) {
+      bodyEl.setAttribute('data-theme', t);
+      if (t === 'dark') {
+        bodyEl.classList.add('dark');
+        htmlEl.classList.add('dark');
+        document.getElementById('themeIcon').innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />';
+        themeToggle.setAttribute('aria-pressed', 'true');
+      } else {
+        bodyEl.classList.remove('dark');
+        htmlEl.classList.remove('dark');
+        document.getElementById('themeIcon').innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.66-10.66h-1M4.34 12.34h-1M18.36 18.36l-.7-.7M6.34 6.34l-.7-.7M18.36 5.64l-.7.7M6.34 17.66l-.7.7M12 8a4 4 0 100 8 4 4 0 000-8z" />';
+        themeToggle.setAttribute('aria-pressed', 'false');
+      }
+      localStorage.setItem('mf_theme', t);
+    }
+
+    setTheme(theme);
+    themeToggle.addEventListener('click', () => {
+      setTheme(bodyEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    });
+
+    // ---- Time-based greeting ----
+    const hour = new Date().getHours();
+    const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+    document.getElementById('timeGreeting').textContent = greeting;
+
+    // ---- Storage keys ----
+    const KEYS = {
+      profile: 'mf_profile',
+      time: 'mf_total_seconds',
+      streak: 'mf_streak',
+      sessions: 'mf_sessions',
+      points: 'mf_points',
+      activity: 'mf_activity'
+    };
+
+    // ---- State ----
+    let profile = JSON.parse(localStorage.getItem(KEYS.profile) || '{"name":"Student","initials":"?"}');
+    let totalSeconds = parseInt(localStorage.getItem(KEYS.time) || '0');
+    let streak = JSON.parse(localStorage.getItem(KEYS.streak) || '{"count":0,"lastDate":""}');
+    let sessions = parseInt(localStorage.getItem(KEYS.sessions) || '0');
+    let points = parseInt(localStorage.getItem(KEYS.points) || '0');
+    let activity = JSON.parse(localStorage.getItem(KEYS.activity) || '[]');
+
+    // ---- Time tracking ----
+    let lastActivity = Date.now();
+    let isActive = true;
+
+    function updateTime() {
+      if (isActive) {
+        totalSeconds++;
+        if (totalSeconds % 10 === 0) {
+          localStorage.setItem(KEYS.time, totalSeconds.toString());
+          displayTime();
+        }
+      }
+    }
+
+    function displayTime() {
+      const hours = (totalSeconds / 3600).toFixed(1);
+      document.getElementById('timeDisplay').textContent = hours + 'h';
+    }
+
+    function trackActivity() {
+      isActive = true;
+      lastActivity = Date.now();
+    }
+
+    setInterval(() => {
+      if (Date.now() - lastActivity > 120000) isActive = false;
+    }, 10000);
+
+    ['mousemove', 'keydown', 'click', 'scroll'].forEach(e => {
+      document.addEventListener(e, trackActivity);
+    });
+
+    setInterval(updateTime, 1000);
+
+    window.addEventListener('beforeunload', () => {
+      localStorage.setItem(KEYS.time, totalSeconds.toString());
+    });
+
+    // ---- Streak ----
+    function updateStreak() {
+      const today = new Date().toDateString();
+      if (streak.lastDate !== today) {
+        const last = new Date(streak.lastDate);
+        const now = new Date(today);
+        const diff = Math.floor((now - last) / 86400000);
+        if (diff === 1) {
+          streak.count++;
+        } else if (diff > 1) {
+          streak.count = 1;
+        }
+        streak.lastDate = today;
+        localStorage.setItem(KEYS.streak, JSON.stringify(streak));
+      }
+      document.getElementById('streakDisplay').textContent = streak.count;
+    }
+
+    // ---- Display stats ----
+    function displayStats() {
+      displayTime();
+      document.getElementById('streakDisplay').textContent = streak.count;
+      document.getElementById('sessionsDisplay').textContent = sessions;
+      document.getElementById('pointsDisplay').textContent = points;
+      document.getElementById('userName').textContent = profile.name;
+      document.getElementById('profileName').textContent = profile.name;
+      document.getElementById('profileDisplayName').textContent = profile.name;
+      document.getElementById('userInitials').textContent = profile.initials;
+      document.getElementById('profileInitials').textContent = profile.initials;
+    }
+
+    // ---- Profile modal ----
+    const profileModal = document.getElementById('profileModal');
+
+    function openProfileModal() {
+      document.getElementById('nameInput').value = profile.name;
+      document.getElementById('initialsInput').value = profile.initials;
+      profileModal.classList.remove('hidden');
+    }
+
+    function closeProfileModal() {
+      profileModal.classList.add('hidden');
+    }
+
+    document.getElementById('editProfile').addEventListener('click', openProfileModal);
+    document.getElementById('editProfileBtn').addEventListener('click', openProfileModal);
+    document.getElementById('cancelProfile').addEventListener('click', closeProfileModal);
+
+    profileModal.addEventListener('click', (e) => {
+      if (e.target === profileModal) closeProfileModal();
+    });
+
+    document.getElementById('saveProfile').addEventListener('click', () => {
+      profile.name = document.getElementById('nameInput').value || 'Student';
+      profile.initials = document.getElementById('initialsInput').value.toUpperCase() || '?';
+      localStorage.setItem(KEYS.profile, JSON.stringify(profile));
+      displayStats();
+      closeProfileModal();
+    });
+
+    // ---- Settings ----
+    document.getElementById('resetStats').addEventListener('click', () => {
+      if (confirm('Reset all statistics? This cannot be undone.')) {
+        totalSeconds = 0;
+        sessions = 0;
+        points = 0;
+        localStorage.setItem(KEYS.time, '0');
+        localStorage.setItem(KEYS.sessions, '0');
+        localStorage.setItem(KEYS.points, '0');
+        displayStats();
+      }
+    });
+
+    document.getElementById('clearData').addEventListener('click', () => {
+      if (confirm('Delete ALL data including profile? This cannot be undone.')) {
+        Object.values(KEYS).forEach(k => localStorage.removeItem(k));
+        location.reload();
+      }
+    });
+
+    // ---- Music Player ----
+    const musicToggle = document.getElementById('musicToggle');
+    const musicPlayer = document.getElementById('musicPlayer');
+    const lofiAudio = document.getElementById('lofiAudio');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const musicIcon = document.getElementById('musicIcon');
+    const musicStatus = document.getElementById('musicStatus');
+    let isPlaying = false;
+
+    lofiAudio.volume = 0.5;
+
+    musicToggle.addEventListener('click', () => {
+      if (isPlaying) {
+        lofiAudio.pause();
+        musicStatus.textContent = 'Play';
+        musicIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>';
+        musicPlayer.classList.add('hidden');
+        isPlaying = false;
+      } else {
+        lofiAudio.play().then(() => {
+          musicStatus.textContent = 'Pause';
+          musicIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"/>';
+          document.getElementById('currentTrack').textContent = 'Lofi Hip Hop Radio — 24/7 Study Beats';
+          musicPlayer.classList.remove('hidden');
+          isPlaying = true;
+        }).catch(() => {
+          alert('Could not play audio. Please check your connection.');
+        });
+      }
+    });
+
+    volumeSlider.addEventListener('input', (e) => {
+      lofiAudio.volume = e.target.value / 100;
+    });
+
+    // ---- Initialize ----
+    updateStreak();
+    displayStats();
+    displayTime();
+  </script>
+</body>
+</html>

@@ -1,0 +1,688 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MathFlow — Schedule</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#6366f1',
+            secondary: '#8b5cf6',
+            accent: '#06b6d4',
+            success: '#10b981',
+            warning: '#f59e0b',
+            error: '#ef4444',
+            bgLight: '#fafafa',
+            cardLight: '#ffffff',
+            bgDark: '#0f0f0f',
+            cardDark: '#1a1a1a',
+            textPrimaryLight: '#111827',
+            textPrimaryDark: '#f9fafb',
+          },
+          borderRadius: { 'card': '8px', 'btn': '6px' }
+        },
+        fontFamily: {
+          sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+          heading: ['Space Grotesk', 'Inter', 'ui-sans-serif']
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="antialiased bg-bgLight text-textPrimaryLight" data-theme="light">
+  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:bg-white focus:px-3 focus:py-2 focus:rounded-md">Skip to content</a>
+
+  <!-- Navigation -->
+  <header class="sticky top-0 z-40 backdrop-blur bg-white/80 dark:bg-black/80 border-b border-gray-100 dark:border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center justify-between">
+        <div class="flex items-center gap-4">
+          <a href="index.html" class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-heading">M</div>
+            <div class="hidden sm:block">
+              <span class="block font-heading text-lg"><p style="color:white;">MathFlow</p></span>
+              <span class="text-sm text-gray-500"><p style="color:white;">Design to Learn</p></span>
+            </div>
+          </a>
+          <nav class="hidden md:flex gap-2 ml-6" aria-label="Primary">
+            <a href="index.html" class="px-3 py-2 text-sm rounded-md text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">Home</a>
+            
+            <a href="schedule.html" class="px-3 py-2 text-sm rounded-md bg-gray-100 dark:bg-gray-800 text-primary">Schedule</a>
+            <a href="ai-tutor.html" class="px-3 py-2 text-sm rounded-md text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">AI Tutor</a>
+            <a href="learn.html" class="px-3 py-2 text-sm rounded-md text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">Learn</a>
+            <a href="resources.html" class="px-3 py-2 text-sm rounded-md text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">Resources</a>
+            <a href="community.html" class="px-3 py-2 text-sm rounded-md text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">Community</a>
+          </nav>
+        </div>
+        <div class="flex items-center gap-3">
+          <button id="themeToggle" class="p-2 rounded-md focus-ring" aria-pressed="false" title="Toggle theme">
+            <svg id="themeIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.66-10.66h-1M4.34 12.34h-1M18.36 18.36l-.7-.7M6.34 6.34l-.7-.7M18.36 5.64l-.7.7M6.34 17.66l-.7.7M12 8a4 4 0 100 8 4 4 0 000-8z" />
+            </svg>
+          </button>
+          <a href="dashboard.html" class="px-4 py-2 rounded-btn bg-primary text-white font-medium hover:opacity-90 transition">Dashboard</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Page Header with Gradient -->
+    <div class="bg-gradient-to-r from-primary via-secondary to-accent text-white rounded-2xl p-8 mb-8 shadow-2xl">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-4xl font-heading font-bold mb-2">Study Schedule</h1>
+          <p class="text-white/90 text-lg">Manage your sessions and collaborate with peers</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col lg:flex-row gap-8">
+      <!-- Calendar Section -->
+      <div class="lg:w-2/3">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 border border-gray-100 dark:border-gray-800">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-heading font-bold text-gray-900 dark:text-white">Session Calendar</h2>
+            <div class="flex items-center gap-2">
+              <button type="button" id="prevMonth" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="Previous month">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+              </button>
+              <span id="currentMonth" class="font-medium min-w-[150px] text-center text-gray-900 dark:text-white"></span>
+              <button type="button" id="nextMonth" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="Next month">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Calendar Grid -->
+          <div class="grid grid-cols-7 gap-1 mb-2">
+            <div class="text-center text-md font-medium text-gray-500 py-2"><p style="color:white;">Sun</p></div>
+            <div class="text-center text-md font-medium text-gray-500 py-2"><p style="color:white;">Mon</p></div>
+            <div class="text-center text-md font-medium text-gray-500 py-2"><p style="color:white;">Tue</p></div>
+            <div class="text-center text-md font-medium text-gray-500 py-2"><p style="color:white;">Wed</p></div>
+            <div class="text-center text-md font-medium text-gray-500 py-2"><p style="color:white;">Thu</p></div>
+            <div class="text-center text-md font-medium text-gray-500 py-2"><p style="color:white;">Fri</p></div>
+            <div class="text-center text-md font-medium text-gray-500 py-2"><p style="color:white;">Sat</p></div>
+          </div>
+          <div id="calendarGrid" class="grid grid-cols-7 gap-1"></div>
+
+          <!-- Legend -->
+          <div class="mt-6 p-4 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg">
+            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2 uppercase tracking-wide">Subject Legend</p>
+            <div class="flex flex-wrap gap-4 text-sm">
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full bg-primary shadow-lg shadow-primary/50"></div>
+                <span class="font-medium"><p style="color:white;">Algebra</p></span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full bg-secondary shadow-lg shadow-secondary/50"></div>
+                <span class="font-medium"><p style="color:white;">Geometry</p></span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full bg-accent shadow-lg shadow-accent/50"></div>
+                <span class="font-medium"><p style="color:white;">Pre-Calculus</p></span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full bg-success shadow-lg shadow-success/50"></div>
+                <span class="font-medium"><p style="color:white;">Study Group</p></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Available Sessions -->
+        <div class="mt-6 bg-cardLight dark:bg-cardDark rounded-2xl shadow-2xl p-6 border border-gray-100 dark:border-gray-800">
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <h2 class="text-xl font-heading font-semibold"><p style="color:white;">Available Sessions</p></h2>
+              <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Join a session and start learning</p>
+            </div>
+            <div class="flex gap-2">
+              <select id="subjectFilter" aria-label="Filter by subject" class="px-3 py-2 rounded-btn border border-gray-200 dark:border-gray-700 text-sm bg-white  focus:ring-2 focus:ring-primary/50">
+                <option value="all">All Subjects</option>
+                <option value="algebra">Algebra</option>
+                <option value="geometry">Geometry</option>
+                <option value="precalc">Pre-Calculus</option>
+              </select>
+              <select id="difficultyFilter" aria-label="Filter by difficulty level" class="px-3 py-2 rounded-btn border border-gray-200 dark:border-gray-700 text-sm bg-white  focus:ring-2 focus:ring-primary/50">
+                <option value="all">All Levels</option>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+              </select>
+            </div>
+          </div>
+          <ul id="sessionList" class="space-y-4"></ul>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="lg:w-1/3 space-y-6">
+        <!-- Quick Actions -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 border border-gray-100 dark:border-gray-800">
+          <h3 class="font-semibold mb-4 flex items-center gap-2 text-gray-900 dark:text-white">
+            <span class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center text-sm">⚡</span>
+            Quick Actions
+          </h3>
+          <div class="space-y-3">
+            <button id="createSessionBtn" class="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-medium flex items-center justify-center gap-2 hover:shadow-lg hover:scale-105 transition-all duration-200">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+              </svg>
+              Create Study Session
+            </button>
+            <button id="findTutorBtn" class="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-medium flex items-center justify-center gap-2 hover:shadow-lg hover:scale-105 transition-all duration-200">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+              Find a Tutor
+            </button>
+          </div>
+        </div>
+
+        <!-- My Registered Sessions -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 border border-gray-100 dark:border-gray-800">
+          <h3 class="font-semibold mb-4 flex items-center gap-2 text-gray-900 dark:text-white">
+            <span class="w-8 h-8 rounded-lg bg-gradient-to-br from-success to-accent text-white flex items-center justify-center text-sm">✓</span>
+            <p style="color:white;">My Registered Sessions</p>
+          </h3>
+          <ul id="mySessionsList" class="space-y-3">
+            <li class="text-center text-gray-500 py-4 text-sm">No registered sessions yet</li>
+          </ul>
+        </div>
+
+        <!-- Upcoming This Week -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 border border-gray-100 dark:border-gray-800">
+          <h3 class="font-semibold mb-4 flex items-center gap-2 text-gray-900 dark:text-white">
+            <span class="w-8 h-8 rounded-lg bg-gradient-to-br from-warning to-error text-white flex items-center justify-center text-sm">📆</span>
+            This Week's Schedule
+          </h3>
+          <div id="weekSchedule" class="space-y-2"></div>
+        </div>
+
+        <!-- Session Stats -->
+        <div class="bg-gradient-to-br from-primary to-secondary rounded-card p-6 text-white">
+          <h3 class="font-semibold mb-4 text-white">Your Session Stats</h3>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <div class="text-3xl font-bold">12</div>
+              <div class="text-sm text-white/80">Sessions Attended</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold">8</div>
+              <div class="text-sm text-white/80">Sessions Hosted</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold">24h</div>
+              <div class="text-sm text-white/80">Total Study Time</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold">4.9</div>
+              <div class="text-sm text-white/80">Avg Rating</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Create Session Modal -->
+  <div id="createModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 p-4">
+    <div class="w-full max-w-xl bg-cardLight dark:bg-cardDark rounded-card shadow-xl p-6 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-heading font-semibold"><p style="color:white;">Create Study Session</p></h3>
+        <button type="button" id="closeModal" class="text-gray-500 hover:text-gray-700 p-1" aria-label="Close modal">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <form id="createSessionForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium mb-1" for="sessionTitle"><p style="color:white;">Session Title</p></label>
+          <input type="text" id="sessionTitle" required class="w-full px-3 py-2 rounded-btn border focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="e.g., Quadratic Equations Review">
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium mb-1" for="sessionSubject"><p style="color:white;">Subject</p></label>
+            <select id="sessionSubject" class="w-full px-3 py-2 rounded-btn border bg-white  focus:ring-2 focus:ring-primary/20 focus:border-primary">
+              <option value="algebra">Algebra</option>
+              <option value="geometry">Geometry</option>
+              <option value="precalc">Pre-Calculus</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1" for="sessionDifficulty"><p style="color:white;">Difficulty</p></label>
+            <select id="sessionDifficulty" class="w-full px-3 py-2 rounded-btn border bg-white  focus:ring-2 focus:ring-primary/20 focus:border-primary">
+              <option value="beginner">Beginner</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="advanced">Advanced</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium mb-1" for="sessionDate"><p style="color:white;">Date</p></label>
+            <input type="date" id="sessionDate" required class="w-full px-3 py-2 rounded-btn border bg-white  focus:ring-2 focus:ring-primary/20 focus:border-primary">
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1" for="sessionTime"><p style="color:white;">Time</p></label>
+            <input type="time" id="sessionTime" required class="w-full px-3 py-2 rounded-btn border bg-white  focus:ring-2 focus:ring-primary/20 focus:border-primary">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium mb-1" for="sessionDuration"><p style="color:white;">Duration (minutes)</p></label>
+            <select id="sessionDuration" class="w-full px-3 py-2 rounded-btn border bg-white  focus:ring-2 focus:ring-primary/20 focus:border-primary">
+              <option value="30">30 minutes</option>
+              <option value="45">45 minutes</option>
+              <option value="60" selected>60 minutes</option>
+              <option value="90">90 minutes</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1" for="sessionMax"><p style="color:white;">Max Participants</p></label>
+            <input type="number" id="sessionMax" min="2" max="20" value="10" class="w-full px-3 py-2 rounded-btn border bg-white  focus:ring-2 focus:ring-primary/20 focus:border-primary">
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1" for="sessionDesc"><p style="color:white;">Description</p></label>
+          <textarea id="sessionDesc" rows="3" class="w-full px-3 py-2 rounded-btn border bg-white  focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="What will be covered in this session?"></textarea>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="checkbox" id="sessionRecurring" class="rounded">
+          <label for="sessionRecurring" class="text-sm"><p style="color:white;">Make this a recurring weekly session</p></label>
+        </div>
+        <div class="flex justify-end gap-3 pt-4">
+          <button type="button" id="cancelCreate" class="px-4 py-2 rounded-btn bg-primary text-white hover:opacity-90">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-btn bg-primary text-white hover:opacity-90">Create Session</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="mt-12 border-t border-gray-100 dark:border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-md bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center font-heading">M</div>
+        <div>
+          <div class="font-medium">MathFlow</div>
+          <div class="text-xs text-gray-500">Made by students, for students</div>
+        </div>
+      </div>
+      <div class="text-sm text-gray-500">&copy; <span id="year"></span> MathFlow. All rights reserved.</div>
+      <div class="flex items-center gap-3">
+        <a href="#" class="text-gray-500 text-sm hover:text-primary">Privacy</a>
+        <a href="#" class="text-gray-500 text-sm hover:text-primary">Terms</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="shared.js"></script>
+  <script>
+    // Sessions data
+    const sessions = [
+      { id: 1, title: 'Quadratic Equations Review', subject: 'algebra', tutor: 'Alex Chen', date: new Date(Date.now() + 86400000), duration: 60, spots: [3, 10], difficulty: 'intermediate' },
+      { id: 2, title: 'Circle Theorems Deep Dive', subject: 'geometry', tutor: 'Maria Rodriguez', date: new Date(Date.now() + 172800000), duration: 45, spots: [8, 12], difficulty: 'beginner' },
+      { id: 3, title: 'Trig Functions Basics', subject: 'precalc', tutor: 'James Wilson', date: new Date(Date.now() + 259200000), duration: 60, spots: [2, 8], difficulty: 'beginner' },
+      { id: 4, title: 'Linear Algebra Intro', subject: 'algebra', tutor: 'Sarah Kim', date: new Date(Date.now() + 345600000), duration: 60, spots: [5, 15], difficulty: 'advanced' },
+      { id: 5, title: 'Proof Techniques Workshop', subject: 'geometry', tutor: 'David Lee', date: new Date(Date.now() + 432000000), duration: 90, spots: [4, 8], difficulty: 'intermediate' },
+      { id: 6, title: 'Limits and Continuity', subject: 'precalc', tutor: 'Emily Chen', date: new Date(Date.now() + 518400000), duration: 60, spots: [6, 10], difficulty: 'intermediate' },
+      { id: 7, title: 'Polynomial Long Division', subject: 'algebra', tutor: 'Michael Brown', date: new Date(Date.now() + 604800000), duration: 45, spots: [7, 12], difficulty: 'beginner' },
+    ];
+
+    const registered = new Set(JSON.parse(localStorage.getItem('mf_registered') || '[]'));
+    let currentDate = new Date();
+
+    // Subject colors
+    const subjectColors = {
+      algebra: 'bg-primary',
+      geometry: 'bg-secondary',
+      precalc: 'bg-accent',
+      'study-group': 'bg-success'
+    };
+
+    // Calendar rendering
+    function renderCalendar() {
+      const grid = document.getElementById('calendarGrid');
+      const monthDisplay = document.getElementById('currentMonth');
+
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth();
+
+      monthDisplay.textContent = new Date(year, month).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const today = new Date();
+
+      let html = '';
+
+      // Empty cells for days before first of month
+      for (let i = 0; i < firstDay; i++) {
+        html += '<div class="aspect-square p-1"></div>';
+      }
+
+      // Days of the month
+      for (let day = 1; day <= daysInMonth; day++) {
+        const date = new Date(year, month, day);
+        const isToday = date.toDateString() === today.toDateString();
+        const daysSessions = sessions.filter(s =>
+          s.date.toDateString() === date.toDateString()
+        );
+
+        html += `
+          <div class="aspect-square p-1">
+            <div class="h-full rounded-lg ${isToday ? 'bg-primary text-white' : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-900 dark:text-white'} calendar-cell cursor-pointer p-1 flex flex-col" data-date="${date.toISOString()}">
+              <span class="text-sm font-medium">${day}</span>
+              <div class="flex-1 flex flex-wrap gap-0.5 mt-1">
+                ${daysSessions.slice(0, 3).map(s => `
+                  <div class="w-1.5 h-1.5 rounded-full ${subjectColors[s.subject]}" title="${s.title}"></div>
+                `).join('')}
+                ${daysSessions.length > 3 ? `<span class="text-xs text-gray-600 dark:text-gray-400">+${daysSessions.length - 3}</span>` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      grid.innerHTML = html;
+
+      // Add click handlers to calendar cells
+      grid.querySelectorAll('.calendar-cell').forEach(cell => {
+        cell.addEventListener('click', () => {
+          const date = new Date(cell.dataset.date);
+          showDaySessions(date);
+        });
+      });
+    }
+
+    function showDaySessions(date) {
+      const daysSessions = sessions.filter(s =>
+        s.date.toDateString() === date.toDateString()
+      );
+
+      if (daysSessions.length > 0) {
+        showToast(`${daysSessions.length} session(s) on ${date.toLocaleDateString()}`, 'info');
+        // Could expand to show a modal with details
+      }
+    }
+
+    // Session list rendering
+    function renderSessions() {
+      const list = document.getElementById('sessionList');
+      const subjectFilter = document.getElementById('subjectFilter').value;
+      const difficultyFilter = document.getElementById('difficultyFilter').value;
+
+      let filtered = sessions.filter(s => {
+        if (subjectFilter !== 'all' && s.subject !== subjectFilter) return false;
+        if (difficultyFilter !== 'all' && s.difficulty !== difficultyFilter) return false;
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        list.innerHTML = '<li class="text-center text-gray-500 py-8">No sessions match your filters</li>';
+        return;
+      }
+
+      list.innerHTML = filtered.map(s => {
+        const isRegistered = registered.has(s.id);
+        const dateStr = s.date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+        const timeStr = s.date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+        return `
+          <li class="p-5 rounded-2xl border-2 border-gray-100 dark:border-gray-800 hover:shadow-2xl hover:scale-[1.02] transition-all duration-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900">
+            <div class="flex items-start justify-between gap-4">
+              <div class="flex items-start gap-4 flex-1">
+                <div class="w-14 h-14 rounded-xl ${subjectColors[s.subject]} text-white flex items-center justify-center font-bold text-xl shadow-lg">
+                  ${s.subject[0].toUpperCase()}
+                </div>
+                <div class="flex-1">
+                  <h4 class="font-semibold text-lg mb-1 text-gray-900 dark:text-white">${s.title}</h4>
+                  <p class="text-sm text-gray-600 dark:text-gray-300 flex items-center gap-2 mb-3">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                    ${s.tutor} &bull; ${dateStr} at ${timeStr}
+                  </p>
+                  <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1 text-xs font-medium rounded-full bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 text-gray-900 dark:text-gray-100 capitalize">${s.difficulty}</span>
+                    <span class="px-3 py-1 text-xs font-medium rounded-full bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 text-gray-900 dark:text-gray-100">
+                      <svg class="w-3 h-3 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      </svg>
+                      ${s.duration} min
+                    </span>
+                    <span class="px-3 py-1 text-xs font-medium rounded-full ${s.spots[0] <= 2 ? 'bg-error/10 text-error border border-error/20' : 'bg-success/10 text-success border border-success/20'}">
+                      ${s.spots[0]}/${s.spots[1]} spots
+                    </span>
+                  </div>
+                  ${isRegistered ? `
+                    <div class="mt-3 flex gap-2">
+                      <button
+                        data-zoom-session="${s.id}"
+                        class="zoom-btn flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-all duration-200"
+                      >
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                        </svg>
+                        Join Zoom Meeting
+                      </button>
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+              <button
+                data-session-id="${s.id}"
+                class="register-btn px-6 py-3 rounded-xl text-sm font-semibold ${isRegistered ? 'bg-gradient-to-r from-success to-accent text-white shadow-lg shadow-success/20' : 'bg-gradient-to-r from-primary to-secondary text-white shadow-lg shadow-primary/20'} hover:scale-105 transition-all duration-200"
+              >
+                ${isRegistered ? '✓ Registered' : 'Register'}
+              </button>
+            </div>
+          </li>
+        `;
+      }).join('');
+
+      // Add event listeners
+      list.querySelectorAll('.register-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = parseInt(btn.dataset.sessionId);
+          toggleRegistration(id);
+        });
+      });
+    }
+
+    function toggleRegistration(id) {
+      if (registered.has(id)) {
+        registered.delete(id);
+        showToast('Unregistered from session', 'info');
+      } else {
+        registered.add(id);
+        showToast('Successfully registered!', 'success');
+      }
+      localStorage.setItem('mf_registered', JSON.stringify(Array.from(registered)));
+      renderSessions();
+      renderMySessions();
+    }
+
+    // My sessions rendering
+    function renderMySessions() {
+      const list = document.getElementById('mySessionsList');
+      const mySessions = sessions.filter(s => registered.has(s.id));
+
+      if (mySessions.length === 0) {
+        list.innerHTML = '<li class="text-center text-gray-500 py-4 text-sm">No registered sessions yet</li>';
+        return;
+      }
+
+      list.innerHTML = mySessions.map(s => {
+        const dateStr = s.date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+        const timeStr = s.date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+        return `
+          <li class="p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+            <div class="flex items-center gap-2">
+              <div class="w-2 h-2 rounded-full ${subjectColors[s.subject]}"></div>
+              <span class="font-medium text-sm" <p style="color:white;">${s.title}</span>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">${dateStr} at ${timeStr}</p>
+          </li>
+        `;
+      }).join('');
+    }
+
+    // Week schedule rendering
+    function renderWeekSchedule() {
+      const container = document.getElementById('weekSchedule');
+      const today = new Date();
+      const weekDays = [];
+
+      for (let i = 0; i < 7; i++) {
+        const date = new Date(today);
+        date.setDate(today.getDate() + i);
+        weekDays.push(date);
+      }
+
+      const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+      container.innerHTML = weekDays.map((date, i) => {
+        const daySessions = sessions.filter(s => s.date.toDateString() === date.toDateString());
+        const isToday = i === 0;
+
+        return `
+          <div class="flex items-center gap-3 p-2 rounded-lg ${isToday ? 'bg-primary/10' : ''}">
+            <div class="w-12 text-center">
+              <div class="text-xs" style="color: rgba(255,255,255,0.6)">${dayNames[date.getDay()]}</div>
+              <div class="text-lg font-semibold" style="color: ${isToday ? '#6366f1' : 'white'}">${date.getDate()}</div>
+            </div>
+            <div class="flex-1">
+              ${daySessions.length > 0 ? daySessions.map(s => `
+                <div class="text-sm flex items-center gap-2">
+                  <div class="w-1.5 h-1.5 rounded-full ${subjectColors[s.subject]}"></div>
+                  <span class="truncate" style="color: white">${s.title}</span>
+                </div>
+              `).join('') : '<span class="text-xs" style="color: rgba(255,255,255,0.5)">No sessions</span>'}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Modal handling
+    const createModal = document.getElementById('createModal');
+    const createBtn = document.getElementById('createSessionBtn');
+    const closeModalBtn = document.getElementById('closeModal');
+    const cancelBtn = document.getElementById('cancelCreate');
+    const createForm = document.getElementById('createSessionForm');
+
+    function openModal() {
+      if (createModal) {
+        createModal.classList.remove('hidden');
+        createModal.classList.add('flex');
+        // Set minimum date to today
+        const dateInput = document.getElementById('sessionDate');
+        if (dateInput) {
+          dateInput.min = new Date().toISOString().split('T')[0];
+        }
+      }
+    }
+
+    function closeModal() {
+      if (createModal) {
+        createModal.classList.add('hidden');
+        createModal.classList.remove('flex');
+      }
+      if (createForm) {
+        createForm.reset();
+      }
+    }
+
+    if (createBtn) createBtn.addEventListener('click', openModal);
+    if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+    if (createModal) {
+      createModal.addEventListener('click', (e) => {
+        if (e.target === createModal) closeModal();
+      });
+    }
+
+    createForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const title = document.getElementById('sessionTitle').value;
+      const subject = document.getElementById('sessionSubject').value;
+      const difficulty = document.getElementById('sessionDifficulty').value;
+      const date = document.getElementById('sessionDate').value;
+      const time = document.getElementById('sessionTime').value;
+      const duration = parseInt(document.getElementById('sessionDuration').value);
+      const maxParticipants = parseInt(document.getElementById('sessionMax').value);
+
+      const newSession = {
+        id: Date.now(),
+        title,
+        subject,
+        tutor: userState.name,
+        date: new Date(`${date}T${time}`),
+        duration,
+        spots: [maxParticipants, maxParticipants],
+        difficulty
+      };
+
+      sessions.unshift(newSession);
+      closeModal();
+      renderCalendar();
+      renderSessions();
+      renderWeekSchedule();
+      showToast('Session created successfully!', 'success');
+    });
+
+    // Navigation
+    document.getElementById('prevMonth').addEventListener('click', () => {
+      currentDate.setMonth(currentDate.getMonth() - 1);
+      renderCalendar();
+    });
+
+    document.getElementById('nextMonth').addEventListener('click', () => {
+      currentDate.setMonth(currentDate.getMonth() + 1);
+      renderCalendar();
+    });
+
+    // Filters
+    document.getElementById('subjectFilter').addEventListener('change', renderSessions);
+    document.getElementById('difficultyFilter').addEventListener('change', renderSessions);
+
+    // Find tutor button
+    document.getElementById('findTutorBtn').addEventListener('click', () => {
+      showToast('Tutor matching coming soon!', 'info');
+    });
+
+    // Escape key to close modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // Initialize
+    renderCalendar();
+    renderSessions();
+    renderMySessions();
+    renderWeekSchedule();
+  </script>
+</body>
+</html>

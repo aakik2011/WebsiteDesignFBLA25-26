@@ -1,0 +1,888 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MathFlow — Resources</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#6366f1',
+            secondary: '#8b5cf6',
+            accent: '#06b6d4',
+            success: '#10b981',
+            warning: '#f59e0b',
+            error: '#ef4444',
+            bgLight: '#fafafa',
+            cardLight: '#ffffff',
+            bgDark: '#0f0f0f',
+            cardDark: '#1a1a1a',
+            textPrimaryLight: '#111827',
+            textPrimaryDark: '#f9fafb',
+          },
+          borderRadius: { 'card': '8px', 'btn': '6px' }
+        },
+        fontFamily: {
+          sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+          heading: ['Space Grotesk', 'Inter', 'ui-sans-serif']
+        }
+      },
+      safelist: [
+        'bg-primary','bg-secondary','bg-accent','bg-success','bg-warning','bg-error',
+        'text-primary','text-secondary','text-accent','text-success','text-warning','text-error',
+        'border-primary','border-secondary','border-accent','from-primary','to-secondary',
+      ]
+    }
+  </script>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Desmos API -->
+  <script src="https://www.desmos.com/api/v1.11/calculator.js?apiKey=beaac17868624419ad7149527efb96ed"></script>
+</head>
+<body class="antialiased bg-bgLight text-textPrimaryLight" data-theme="light">
+  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:bg-white focus:px-3 focus:py-2 focus:rounded-md">Skip to content</a>
+
+  <!-- Navigation -->
+  <header class="sticky top-0 z-40 backdrop-blur bg-white/80 dark:bg-black/80 border-b border-gray-100 dark:border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center justify-between">
+        <div class="flex items-center gap-4">
+          <a href="index.html" class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-heading">M</div>
+            <div class="hidden sm:block">
+              <span class="block font-heading text-lg"><p style="color:white;">MathFlow</p></span>
+              <span class="text-sm text-gray-500"><p style="color:white;">Design to Learn</p></span>
+            </div>
+          </a>
+          <nav class="hidden md:flex gap-2 ml-6" aria-label="Primary">
+            <a href="index.html" class="px-3 py-2 text-sm rounded-md text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">Home</a>
+            <a href="schedule.html" class="px-3 py-2 text-sm rounded-md text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">Schedule</a>
+            <a href="ai-tutor.html" class="px-3 py-2 text-sm rounded-md text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">AI Tutor</a>
+            <a href="learn.html" class="px-3 py-2 text-sm rounded-md text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">Learn</a>
+            <a href="resources.html" class="px-3 py-2 text-sm rounded-md bg-gray-100 dark:bg-gray-800 text-primary">Resources</a>
+            <a href="community.html" class="px-3 py-2 text-sm rounded-md text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">Community</a>
+          </nav>
+        </div>
+        <div class="flex items-center gap-3">
+          <button id="themeToggle" class="p-2 rounded-md focus-ring" aria-pressed="false" title="Toggle theme">
+            <svg id="themeIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.66-10.66h-1M4.34 12.34h-1M18.36 18.36l-.7-.7M6.34 6.34l-.7-.7M18.36 5.64l-.7.7M6.34 17.66l-.7.7M12 8a4 4 0 100 8 4 4 0 000-8z" />
+            </svg>
+          </button>
+          <a href="dashboard.html" class="px-4 py-2 rounded-btn bg-primary text-white font-medium hover:opacity-90 transition">Dashboard</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Hero Banner -->
+    <div class="bg-gradient-to-r from-primary via-secondary to-accent text-white rounded-2xl p-8 mb-8 shadow-2xl">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-4xl font-heading font-bold mb-2">Learning Resources</h1>
+          <p class="text-white/90 text-lg">Curated study materials, cheat sheets, calculators, and tools to help you succeed</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-5 mb-8 border border-gray-100 dark:border-gray-800">
+      <div class="flex flex-col md:flex-row gap-4">
+        <div class="flex-1 relative">
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <input type="text" id="searchInput" placeholder="Search resources..." class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/30 focus:border-primary transition">
+        </div>
+        <div class="flex gap-3">
+          <select id="typeFilter" class="px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/30 focus:border-primary transition text-sm">
+            <option value="all">All Types</option>
+            <option value="cheatsheet">Cheat Sheets</option>
+            <option value="video">Videos</option>
+            <option value="practice">Practice Sets</option>
+            <option value="tool">Tools</option>
+          </select>
+          <select id="subjectFilter" class="px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/30 focus:border-primary transition text-sm">
+            <option value="all">All Subjects</option>
+            <option value="algebra">Algebra</option>
+            <option value="geometry">Geometry</option>
+            <option value="precalc">Pre-Calculus</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Featured Resources -->
+    <section class="mb-10">
+      <h2 class="text-xl font-heading font-semibold mb-4 text-gray-900 dark:text-white">Featured Resources</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+        <button onclick="openDocumentModal(1)" class="bg-gradient-to-br from-primary to-secondary rounded-2xl p-6 text-white text-left hover:scale-[1.03] hover:shadow-2xl hover:shadow-primary/30 transition-all duration-200 group">
+          <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mb-4 group-hover:bg-white/30 transition">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+          </div>
+          <h3 class="font-heading font-semibold text-lg">Complete Formula Sheet</h3>
+          <p class="text-sm text-white/80 mt-1">All formulas in one place</p>
+          <div class="mt-3 text-xs text-white/60 flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            Click to view
+          </div>
+        </button>
+
+        <button onclick="scrollToCalculator()" class="bg-gradient-to-br from-accent to-success rounded-2xl p-6 text-white text-left hover:scale-[1.03] hover:shadow-2xl hover:shadow-accent/30 transition-all duration-200 group">
+          <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mb-4 group-hover:bg-white/30 transition">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <h3 class="font-heading font-semibold text-lg">Quick Calculator</h3>
+          <p class="text-sm text-white/80 mt-1">Quadratic, Pythagorean & more</p>
+          <div class="mt-3 text-xs text-white/60 flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            Jump to calculator
+          </div>
+        </button>
+
+        <a href="learn.html" class="bg-gradient-to-br from-warning to-error rounded-2xl p-6 text-white text-left hover:scale-[1.03] hover:shadow-2xl hover:shadow-warning/30 transition-all duration-200 group">
+          <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mb-4 group-hover:bg-white/30 transition">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+            </svg>
+          </div>
+          <h3 class="font-heading font-semibold text-lg">Practice Problems</h3>
+          <p class="text-sm text-white/80 mt-1">AI-generated questions</p>
+          <div class="mt-3 text-xs text-white/60 flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+            Go to AI Learn
+          </div>
+        </a>
+
+        <a href="https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab" target="_blank" rel="noopener" class="bg-gradient-to-br from-gray-700 to-gray-900 rounded-2xl p-6 text-white text-left hover:scale-[1.03] hover:shadow-2xl hover:shadow-gray-900/40 transition-all duration-200 group">
+          <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mb-4 group-hover:bg-white/30 transition">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <h3 class="font-heading font-semibold text-lg">Video Tutorials</h3>
+          <p class="text-sm text-white/80 mt-1">3Blue1Brown Linear Algebra</p>
+          <div class="mt-3 text-xs text-white/60 flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            Opens YouTube
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Resources Grid -->
+    <section class="mb-12">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-heading font-semibold text-gray-900 dark:text-white">All Resources</h2>
+        <span id="resourceCount" class="text-sm text-gray-500 dark:text-gray-400 font-medium"></span>
+      </div>
+      <div id="resourcesGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </section>
+
+    <!-- Quick Calculator -->
+    <section id="calculatorSection" class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 mb-12 border border-gray-100 dark:border-gray-800">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="w-10 h-10 rounded-xl bg-gradient-to-br from-accent to-success text-white flex items-center justify-center text-xl">🧮</span>
+        <div>
+          <h2 class="text-xl font-heading font-semibold text-gray-900 dark:text-white">Quick Calculator</h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Solve common math problems instantly</p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- Left: Controls -->
+        <div>
+          <div class="mb-5">
+            <label class="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Calculator Type</label>
+            <div class="flex gap-2 flex-wrap">
+              <button class="calc-type-btn px-4 py-2 rounded-xl bg-gradient-to-r from-primary to-secondary text-white text-sm font-medium shadow-lg shadow-primary/20 transition-all duration-200" data-type="quadratic">Quadratic</button>
+              <button class="calc-type-btn px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary transition-all duration-200" data-type="pythagorean">Pythagorean</button>
+              <button class="calc-type-btn px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary transition-all duration-200" data-type="distance">Distance</button>
+            </div>
+          </div>
+
+          <!-- Quadratic -->
+          <div id="quadraticCalc">
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4 font-mono bg-gray-50 dark:bg-gray-900 px-4 py-2 rounded-xl border border-gray-100 dark:border-gray-700">ax² + bx + c = 0</p>
+            <div class="grid grid-cols-3 gap-3 mb-4">
+              <div>
+                <label class="block text-sm font-medium mb-1.5 text-gray-700 dark:text-gray-300">a</label>
+                <input type="number" id="calcA" value="1" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/30 focus:border-primary transition text-center text-lg font-mono">
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5 text-gray-700 dark:text-gray-300">b</label>
+                <input type="number" id="calcB" value="0" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/30 focus:border-primary transition text-center text-lg font-mono">
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5 text-gray-700 dark:text-gray-300">c</label>
+                <input type="number" id="calcC" value="0" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/30 focus:border-primary transition text-center text-lg font-mono">
+              </div>
+            </div>
+            <button id="solveQuadratic" class="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-semibold hover:shadow-lg hover:scale-[1.02] transition-all duration-200">
+              Solve Equation
+            </button>
+          </div>
+
+          <!-- Pythagorean -->
+          <div id="pythagoreanCalc" class="hidden">
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4 font-mono bg-gray-50 dark:bg-gray-900 px-4 py-2 rounded-xl border border-gray-100 dark:border-gray-700">a² + b² = c² — leave one field empty to solve for it</p>
+            <div class="grid grid-cols-3 gap-3 mb-4">
+              <div>
+                <label class="block text-sm font-medium mb-1.5 text-gray-700 dark:text-gray-300">a</label>
+                <input type="number" id="pythA" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/30 focus:border-primary transition text-center font-mono" placeholder="?">
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5 text-gray-700 dark:text-gray-300">b</label>
+                <input type="number" id="pythB" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/30 focus:border-primary transition text-center font-mono" placeholder="?">
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5 text-gray-700 dark:text-gray-300">c (hyp)</label>
+                <input type="number" id="pythC" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/30 focus:border-primary transition text-center font-mono" placeholder="?">
+              </div>
+            </div>
+            <button id="solvePythagorean" class="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-accent to-success text-white font-semibold hover:shadow-lg hover:scale-[1.02] transition-all duration-200">
+              Calculate Missing Side
+            </button>
+          </div>
+
+          <!-- Distance -->
+          <div id="distanceCalc" class="hidden">
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4 font-mono bg-gray-50 dark:bg-gray-900 px-4 py-2 rounded-xl border border-gray-100 dark:border-gray-700">d = √((x₂−x₁)² + (y₂−y₁)²)</p>
+            <div class="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <label class="block text-sm font-medium mb-1.5 text-gray-700 dark:text-gray-300">Point 1</label>
+                <div class="flex gap-2">
+                  <input type="number" id="x1" placeholder="x₁" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/30 focus:border-primary transition text-center font-mono">
+                  <input type="number" id="y1" placeholder="y₁" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/30 focus:border-primary transition text-center font-mono">
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5 text-gray-700 dark:text-gray-300">Point 2</label>
+                <div class="flex gap-2">
+                  <input type="number" id="x2" placeholder="x₂" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/30 focus:border-primary transition text-center font-mono">
+                  <input type="number" id="y2" placeholder="y₂" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/30 focus:border-primary transition text-center font-mono">
+                </div>
+              </div>
+            </div>
+            <button id="solveDistance" class="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-warning to-error text-white font-semibold hover:shadow-lg hover:scale-[1.02] transition-all duration-200">
+              Calculate Distance
+            </button>
+          </div>
+        </div>
+
+        <!-- Right: Result -->
+        <div>
+          <div id="calcResult" class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-2xl p-6 h-full min-h-[220px] flex flex-col justify-center border border-gray-100 dark:border-gray-700">
+            <div class="text-center text-gray-400">
+              <svg class="w-14 h-14 mx-auto mb-3 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+              </svg>
+              <p class="text-sm font-medium">Enter values and click solve</p>
+              <p class="text-xs mt-1 opacity-70">Results will appear here</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Desmos Graphing Calculator -->
+    <section class="mb-12">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+        <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent text-white flex items-center justify-center text-xl">📈</span>
+            <div>
+              <h2 class="text-xl font-heading font-semibold text-gray-900 dark:text-white">Desmos Graphing Calculator</h2>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Plot equations, explore functions, and visualize math interactively</p>
+            </div>
+          </div>
+          <a href="https://www.desmos.com/calculator" target="_blank" rel="noopener" class="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-300 hover:border-primary hover:text-primary transition">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            Open Full Version
+          </a>
+        </div>
+        <div id="desmosCalculator" style="width: 100%; height: 500px;"></div>
+      </div>
+    </section>
+
+    <!-- Cheat Sheets -->
+    <section class="mb-12">
+      <h2 class="text-xl font-heading font-semibold mb-4 text-gray-900 dark:text-white">Quick Reference Cheat Sheets</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 border border-gray-100 dark:border-gray-800">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center text-sm font-bold">A</span>
+            <h3 class="font-heading font-semibold text-gray-900 dark:text-white">Algebra Formulas</h3>
+          </div>
+          <div class="space-y-2 text-sm font-mono">
+            <div class="p-2.5 bg-gradient-to-r from-primary to-secondary rounded-lg text-white">x = (-b ± √(b²−4ac)) / 2a</div>
+            <div class="p-2.5 bg-gray-800 dark:bg-gray-900 rounded-lg text-white">m = (y₂ − y₁) / (x₂ − x₁)</div>
+            <div class="p-2.5 bg-gray-800 dark:bg-gray-900 rounded-lg text-white">y − y₁ = m(x − x₁)</div>
+            <div class="p-2.5 bg-gray-800 dark:bg-gray-900 rounded-lg text-white">y = mx + b</div>
+            <div class="p-2.5 bg-gray-800 dark:bg-gray-900 rounded-lg text-white">a² − b² = (a+b)(a−b)</div>
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 border border-gray-100 dark:border-gray-800">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-8 h-8 rounded-lg bg-gradient-to-br from-secondary to-accent text-white flex items-center justify-center text-sm font-bold">G</span>
+            <h3 class="font-heading font-semibold text-gray-900 dark:text-white">Geometry Formulas</h3>
+          </div>
+          <div class="space-y-2 text-sm font-mono">
+            <div class="p-2.5 bg-gradient-to-r from-secondary to-accent rounded-lg text-white">A = πr²</div>
+            <div class="p-2.5 bg-gray-800 dark:bg-gray-900 rounded-lg text-white">C = 2πr</div>
+            <div class="p-2.5 bg-gray-800 dark:bg-gray-900 rounded-lg text-white">A = ½bh</div>
+            <div class="p-2.5 bg-gray-800 dark:bg-gray-900 rounded-lg text-white">a² + b² = c²</div>
+            <div class="p-2.5 bg-gray-800 dark:bg-gray-900 rounded-lg text-white">d = √((x₂−x₁)² + (y₂−y₁)²)</div>
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 border border-gray-100 dark:border-gray-800">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-8 h-8 rounded-lg bg-gradient-to-br from-accent to-success text-white flex items-center justify-center text-sm font-bold">T</span>
+            <h3 class="font-heading font-semibold text-gray-900 dark:text-white">Trigonometry</h3>
+          </div>
+          <div class="space-y-2 text-sm font-mono">
+            <div class="p-2.5 bg-gradient-to-r from-accent to-success rounded-lg text-white">sin θ = opp / hyp</div>
+            <div class="p-2.5 bg-gray-800 dark:bg-gray-900 rounded-lg text-white">cos θ = adj / hyp</div>
+            <div class="p-2.5 bg-gray-800 dark:bg-gray-900 rounded-lg text-white">tan θ = opp / adj</div>
+            <div class="p-2.5 bg-gray-800 dark:bg-gray-900 rounded-lg text-white">sin²θ + cos²θ = 1</div>
+            <div class="p-2.5 bg-gray-800 dark:bg-gray-900 rounded-lg text-white">tan θ = sin θ / cos θ</div>
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 border border-gray-100 dark:border-gray-800">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-8 h-8 rounded-lg bg-gradient-to-br from-warning to-error text-white flex items-center justify-center text-sm font-bold">P</span>
+            <h3 class="font-heading font-semibold text-gray-900 dark:text-white">Pre-Calculus</h3>
+          </div>
+          <div class="space-y-2 text-sm font-mono">
+            <div class="p-2.5 bg-gradient-to-r from-warning to-error rounded-lg text-white">lim(x→a) f(x) = L</div>
+            <div class="p-2.5 bg-gray-800 dark:bg-gray-900 rounded-lg text-white">d/dx(xⁿ) = nxⁿ⁻¹</div>
+            <div class="p-2.5 bg-gray-800 dark:bg-gray-900 rounded-lg text-white">Sₙ = n(a₁ + aₙ)/2</div>
+            <div class="p-2.5 bg-gray-800 dark:bg-gray-900 rounded-lg text-white">Sₙ = a₁(1−rⁿ)/(1−r)</div>
+            <div class="p-2.5 bg-gray-800 dark:bg-gray-900 rounded-lg text-white">e ≈ 2.71828, π ≈ 3.14159</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Document Modal -->
+  <div id="documentModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+    <div class="w-full max-w-4xl max-h-[90vh] bg-cardLight dark:bg-cardDark rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+      <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+        <h3 id="docTitle" class="text-2xl font-heading font-bold text-gray-900 dark:text-white"></h3>
+        <button type="button" id="closeDocModal" class="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div id="docContent" class="p-6 overflow-y-auto flex-1"></div>
+    </div>
+  </div>
+
+  <!-- Practice Modal -->
+  <div id="practiceModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+    <div class="w-full max-w-4xl max-h-[90vh] bg-cardLight dark:bg-cardDark rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+      <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+        <div>
+          <h3 id="practiceTitle" class="text-2xl font-heading font-bold text-gray-900 dark:text-white"></h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Answer all questions and check your solutions</p>
+        </div>
+        <button type="button" id="closePracticeModal" class="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div id="practiceContent" class="p-6 overflow-y-auto flex-1"></div>
+      <div class="p-6 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 flex gap-3">
+        <button id="checkAnswers" class="px-6 py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-xl font-semibold hover:shadow-lg hover:scale-[1.02] transition-all duration-200">
+          Check Answers
+        </button>
+        <button id="showSolutions" class="px-6 py-3 bg-gradient-to-r from-success to-accent text-white rounded-xl font-semibold hover:shadow-lg hover:scale-[1.02] transition-all duration-200">
+          Show Solutions
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="mt-12 border-t border-gray-100 dark:border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-md bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center font-heading">M</div>
+        <div>
+          <div class="font-medium">MathFlow</div>
+          <div class="text-xs text-gray-500">Made by students, for students</div>
+        </div>
+      </div>
+      <div class="text-sm text-gray-500">&copy; <span id="year"></span> MathFlow. All rights reserved.</div>
+      <div class="flex items-center gap-3">
+        <a href="#" class="text-gray-500 text-sm hover:text-primary">Privacy</a>
+        <a href="#" class="text-gray-500 text-sm hover:text-primary">Terms</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="shared.js"></script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Fallback debounce if not in shared.js
+    if (typeof debounce === 'undefined') {
+      window.debounce = function(fn, delay) {
+        let t;
+        return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), delay); };
+      };
+    }
+
+    // Resources data
+    const resources = [
+      { id: 1,  title: 'Algebra Essentials Cheat Sheet',          type: 'cheatsheet', subject: 'algebra',  downloads: 12543,  rating: 4.8, icon: 'document',    url: 'https://tutorial.math.lamar.edu/pdf/Algebra_Cheat_Sheet.pdf' },
+      { id: 2,  title: 'Quadratic Equations — Khan Academy',       type: 'video',      subject: 'algebra',  downloads: 8756,   rating: 4.9, icon: 'video',       url: 'https://www.youtube.com/watch?v=i7idZfS8t8w' },
+      { id: 3,  title: 'Linear Equations Practice — Paul\'s Math', type: 'practice',   subject: 'algebra',  downloads: 23415,  rating: 4.7, icon: 'pencil',      url: 'https://tutorial.math.lamar.edu/Problems/Alg/Alg.aspx' },
+      { id: 4,  title: 'Geometry Reference Sheet',                 type: 'cheatsheet', subject: 'geometry', downloads: 15672,  rating: 4.6, icon: 'document',    url: 'https://mathispower4u.com/downloads/Geometry_Ref_Sheet.pdf' },
+      { id: 5,  title: 'Circle Properties — 3Blue1Brown',          type: 'video',      subject: 'geometry', downloads: 7234,   rating: 4.9, icon: 'video',       url: 'https://www.youtube.com/watch?v=O-6f5dVixpA' },
+      { id: 6,  title: 'Triangle Practice — Khan Academy',         type: 'practice',   subject: 'geometry', downloads: 18934,  rating: 4.5, icon: 'pencil',      url: 'https://www.khanacademy.org/math/geometry/hs-geo-trig' },
+      { id: 7,  title: 'Trigonometry Cheat Sheet',                 type: 'cheatsheet', subject: 'precalc',  downloads: 21567,  rating: 4.9, icon: 'document',    url: 'https://tutorial.math.lamar.edu/pdf/Trig_Cheat_Sheet.pdf' },
+      { id: 8,  title: 'Calculus Limits — Professor Leonard',      type: 'video',      subject: 'precalc',  downloads: 6342,   rating: 4.8, icon: 'video',       url: 'https://www.youtube.com/watch?v=YNstP0ESndU' },
+      { id: 9,  title: 'Pre-Calculus Practice — MIT OCW',          type: 'practice',   subject: 'precalc',  downloads: 14567,  rating: 4.6, icon: 'pencil',      url: 'https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/' },
+      { id: 10, title: 'Desmos Graphing Calculator',               type: 'tool',       subject: 'all',      downloads: 342178, rating: 4.9, icon: 'calculator',  url: 'https://www.desmos.com/calculator' },
+      { id: 11, title: 'Unit Circle — Interactive',                type: 'cheatsheet', subject: 'precalc',  downloads: 27894,  rating: 4.9, icon: 'document',    url: 'https://www.mathsisfun.com/geometry/unit-circle.html' },
+      { id: 12, title: 'Factoring Polynomials — Organic Chem Tutor', type: 'video',   subject: 'algebra',  downloads: 9456,   rating: 4.8, icon: 'video',       url: 'https://www.youtube.com/watch?v=dTj4M9NZo_Y' },
+      { id: 13, title: 'Calculus Cheat Sheet — Paul\'s Notes',     type: 'cheatsheet', subject: 'precalc',  downloads: 31245,  rating: 4.9, icon: 'document',    url: 'https://tutorial.math.lamar.edu/pdf/Calculus_Cheat_Sheet_All.pdf' },
+      { id: 14, title: 'Linear Algebra — 3Blue1Brown Series',      type: 'video',      subject: 'algebra',  downloads: 12389,  rating: 5.0, icon: 'video',       url: 'https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab' },
+      { id: 15, title: 'Statistics Basics — Khan Academy',         type: 'video',      subject: 'all',      downloads: 8734,   rating: 4.7, icon: 'video',       url: 'https://www.youtube.com/watch?v=uhxtUt_-GyM' },
+      { id: 16, title: 'Wolfram Alpha — Math Solver',              type: 'tool',       subject: 'all',      downloads: 156789, rating: 4.8, icon: 'calculator',  url: 'https://www.wolframalpha.com/' },
+    ];
+
+    const typeIcons = {
+      document:   '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>',
+      video:      '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>',
+      pencil:     '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>',
+      calculator: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>'
+    };
+
+    const typeConfig = {
+      cheatsheet: { label: 'Cheat Sheet', hex: '#6366f1', action: 'View'     },
+      video:      { label: 'Video',       hex: '#ef4444', action: 'Watch'    },
+      practice:   { label: 'Practice',   hex: '#10b981', action: 'Practice' },
+      tool:       { label: 'Tool',        hex: '#06b6d4', action: 'Open'     }
+    };
+
+    const subjectLabels = { algebra: 'Algebra', geometry: 'Geometry', precalc: 'Pre-Calculus', all: 'All Subjects' };
+
+    let savedResources = new Set(JSON.parse(localStorage.getItem('mf_savedResources') || '[]'));
+
+    // ---- Render resources grid ----
+    function renderResources() {
+      const grid = document.getElementById('resourcesGrid');
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const typeFilter = document.getElementById('typeFilter').value;
+      const subjectFilter = document.getElementById('subjectFilter').value;
+
+      const filtered = resources.filter(r => {
+        if (searchTerm && !r.title.toLowerCase().includes(searchTerm)) return false;
+        if (typeFilter !== 'all' && r.type !== typeFilter) return false;
+        if (subjectFilter !== 'all' && r.subject !== subjectFilter && r.subject !== 'all') return false;
+        return true;
+      });
+
+      document.getElementById('resourceCount').textContent = `${filtered.length} resource${filtered.length !== 1 ? 's' : ''}`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div class="col-span-full text-center py-16 text-gray-400"><p class="text-lg font-medium">No resources found</p><p class="text-sm mt-1">Try adjusting your filters</p></div>';
+        return;
+      }
+
+      grid.innerHTML = filtered.map(r => {
+        const isSaved = savedResources.has(r.id);
+        const cfg = typeConfig[r.type];
+        const stars = '★'.repeat(Math.floor(r.rating)) + (r.rating % 1 >= 0.5 ? '½' : '');
+
+        return `
+          <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 p-6 flex flex-col hover:scale-[1.02] hover:shadow-2xl transition-all duration-200">
+            <div class="flex items-start justify-between mb-4">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background-color: ${cfg.hex}18">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: ${cfg.hex}">
+                  ${typeIcons[r.icon]}
+                </svg>
+              </div>
+              <button class="save-btn p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition ${isSaved ? 'text-warning' : 'text-gray-300 dark:text-gray-600 hover:text-warning'}" data-id="${r.id}" title="${isSaved ? 'Unsave' : 'Save'}">
+                <svg class="w-5 h-5" fill="${isSaved ? 'currentColor' : 'none'}" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                </svg>
+              </button>
+            </div>
+
+            <h3 class="font-semibold text-gray-900 dark:text-white mb-2 leading-snug">${r.title}</h3>
+
+            <div class="flex items-center gap-2 mb-3 flex-wrap">
+              <span class="px-2.5 py-0.5 text-xs font-medium rounded-full" style="background-color: ${cfg.hex}15; color: ${cfg.hex}">${cfg.label}</span>
+              <span class="px-2.5 py-0.5 text-xs font-medium rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">${subjectLabels[r.subject]}</span>
+            </div>
+
+            <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-4 mt-auto">
+              <span class="text-warning font-medium">${r.rating} ★</span>
+              <span>${r.downloads.toLocaleString()} views</span>
+            </div>
+
+            <button class="w-full px-4 py-2.5 rounded-xl text-white font-semibold hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-150" style="background: linear-gradient(135deg, ${cfg.hex}, ${cfg.hex}cc)" onclick="downloadResource(${r.id})">
+              ${cfg.action}
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      document.querySelectorAll('.save-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = parseInt(btn.dataset.id);
+          if (savedResources.has(id)) {
+            savedResources.delete(id);
+            showToast('Removed from saved', 'info');
+          } else {
+            savedResources.add(id);
+            showToast('Saved to your library!', 'success');
+          }
+          localStorage.setItem('mf_savedResources', JSON.stringify(Array.from(savedResources)));
+          renderResources();
+        });
+      });
+    }
+
+    // ---- Document content ----
+    const documentContent = {
+      1: {
+        title: 'Algebra Essentials Cheat Sheet',
+        content: `
+          <div class="space-y-6 text-white">
+            <div class="bg-gradient-to-r from-primary/10 to-secondary/10 p-6 rounded-2xl">
+              <h3 class="text-xl font-heading font-semibold mb-3 text-white">1. Quadratic Formula</h3>
+              <p class="text-lg font-mono bg-white/10 p-4 rounded-xl border border-white/20 text-white">x = (-b ± √(b² − 4ac)) / 2a</p>
+              <p class="mt-3 text-sm text-white/90"><strong>Example:</strong> x² + 5x + 6 = 0 → x = −2 or x = −3</p>
+            </div>
+            <div class="bg-gradient-to-r from-accent/10 to-success/10 p-6 rounded-2xl">
+              <h3 class="text-xl font-heading font-semibold mb-3 text-white">2. Linear Equations</h3>
+              <div class="grid md:grid-cols-2 gap-4">
+                <div><p class="font-semibold text-sm mb-1 text-white">Slope-Intercept:</p><p class="font-mono bg-white/10 p-3 rounded-xl border border-white/20 text-white">y = mx + b</p></div>
+                <div><p class="font-semibold text-sm mb-1 text-white">Point-Slope:</p><p class="font-mono bg-white/10 p-3 rounded-xl border border-white/20 text-white">y − y₁ = m(x − x₁)</p></div>
+              </div>
+            </div>
+            <div class="bg-gradient-to-r from-warning/10 to-error/10 p-6 rounded-2xl">
+              <h3 class="text-xl font-heading font-semibold mb-3 text-white">3. Factoring Techniques</h3>
+              <div class="space-y-2">
+                <div class="p-3 bg-white/10 rounded-xl border border-white/20"><p class="font-semibold text-sm text-white">Difference of Squares:</p><p class="font-mono text-sm mt-1 text-white">a² − b² = (a+b)(a−b)</p></div>
+                <div class="p-3 bg-white/10 rounded-xl border border-white/20"><p class="font-semibold text-sm text-white">Perfect Square Trinomial:</p><p class="font-mono text-sm mt-1 text-white">a² + 2ab + b² = (a+b)²</p></div>
+                <div class="p-3 bg-white/10 rounded-xl border border-white/20"><p class="font-semibold text-sm text-white">Sum of Cubes:</p><p class="font-mono text-sm mt-1 text-white">a³ + b³ = (a+b)(a²−ab+b²)</p></div>
+              </div>
+            </div>
+            <div class="bg-gradient-to-r from-secondary/10 to-primary/10 p-6 rounded-2xl">
+              <h3 class="text-xl font-heading font-semibold mb-3 text-white">4. Exponent Rules</h3>
+              <div class="grid grid-cols-2 gap-2">
+                <p class="font-mono bg-white/10 p-3 rounded-xl border border-white/20 text-sm text-white">aᵐ · aⁿ = aᵐ⁺ⁿ</p>
+                <p class="font-mono bg-white/10 p-3 rounded-xl border border-white/20 text-sm text-white">aᵐ / aⁿ = aᵐ⁻ⁿ</p>
+                <p class="font-mono bg-white/10 p-3 rounded-xl border border-white/20 text-sm text-white">(aᵐ)ⁿ = aᵐⁿ</p>
+                <p class="font-mono bg-white/10 p-3 rounded-xl border border-white/20 text-sm text-white">a⁻ⁿ = 1/aⁿ</p>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      4: {
+        title: 'Geometry Theorems Guide',
+        content: `
+          <div class="space-y-6 text-white">
+            <div class="bg-gradient-to-r from-secondary/10 to-accent/10 p-6 rounded-2xl">
+              <h3 class="text-xl font-heading font-semibold mb-3 text-white">1. Triangle Theorems</h3>
+              <div class="space-y-3">
+                <div class="p-4 bg-white/10 rounded-xl border border-white/20"><p class="font-semibold text-white">Pythagorean Theorem:</p><p class="font-mono text-lg mt-1 text-white">a² + b² = c²</p></div>
+                <div class="p-4 bg-white/10 rounded-xl border border-white/20"><p class="font-semibold text-white">Angle Sum:</p><p class="font-mono mt-1 text-white">∠A + ∠B + ∠C = 180°</p></div>
+              </div>
+            </div>
+            <div class="bg-gradient-to-r from-primary/10 to-warning/10 p-6 rounded-2xl">
+              <h3 class="text-xl font-heading font-semibold mb-3 text-white">2. Circle Theorems</h3>
+              <div class="space-y-3">
+                <div class="p-4 bg-white/10 rounded-xl border border-white/20"><p class="font-mono text-white">Area = πr²</p><p class="font-mono text-white">Circumference = 2πr</p></div>
+                <div class="p-4 bg-white/10 rounded-xl border border-white/20"><p class="text-white">Inscribed angle = ½ central angle subtending the same arc</p></div>
+              </div>
+            </div>
+          </div>
+        `
+      }
+    };
+
+    // ---- Practice problems ----
+    const practiceProblems = {
+      3: {
+        title: 'Linear Equations — 5 Practice Problems',
+        problems: [
+          { question: 'Solve for x: 3x + 5 = 20', answer: 'x = 5', solution: 'Subtract 5 → 3x = 15. Divide by 3 → x = 5' },
+          { question: 'Solve for x: 2x − 8 = 4x + 2', answer: 'x = -5', solution: 'Subtract 2x → −8 = 2x + 2. Subtract 2 → −10 = 2x. Divide → x = −5' },
+          { question: 'Solve for x: 5(x − 3) = 2x + 6', answer: 'x = 7', solution: 'Distribute → 5x − 15 = 2x + 6. Simplify → 3x = 21. Divide → x = 7' },
+          { question: 'Solve for x: (x + 4)/3 = 5', answer: 'x = 11', solution: 'Multiply both sides by 3 → x + 4 = 15. Subtract 4 → x = 11' },
+          { question: 'Solve for x: 7x + 3 = 4x + 18', answer: 'x = 5', solution: 'Subtract 4x → 3x + 3 = 18. Subtract 3 → 3x = 15. Divide → x = 5' }
+        ]
+      },
+      6: {
+        title: 'Triangle Practice — 5 Problems',
+        problems: [
+          { question: 'A right triangle has legs 3 and 4. Find the hypotenuse.', answer: '5', solution: 'c² = 3² + 4² = 9 + 16 = 25 → c = 5' },
+          { question: 'Two angles of a triangle are 45° and 65°. Find the third angle.', answer: '70°', solution: '180° − 45° − 65° = 70°' },
+          { question: 'Find the area of a triangle with base 8 cm and height 5 cm.', answer: '20 cm²', solution: 'A = ½ × 8 × 5 = 20 cm²' },
+          { question: 'A triangle has sides 5, 7, and x. What is the range for x?', answer: '2 < x < 12', solution: '|5 − 7| < x < 5 + 7 → 2 < x < 12' },
+          { question: 'An equilateral triangle has perimeter 24 cm. Find one side.', answer: '8 cm', solution: '24 ÷ 3 = 8 cm' }
+        ]
+      },
+      9: {
+        title: 'Pre-Calculus Practice Exam',
+        problems: [
+          { question: 'Evaluate: lim(x→2) (x² − 4)/(x − 2)', answer: '4', solution: 'Factor → (x+2)(x−2)/(x−2) = x+2. At x=2: 2+2 = 4' },
+          { question: 'Find the derivative of f(x) = 3x² + 5x − 2', answer: "f'(x) = 6x + 5", solution: 'Power rule: 3(2x) + 5(1) − 0 = 6x + 5' },
+          { question: 'Convert 135° to radians', answer: '3π/4', solution: '135 × (π/180) = 3π/4' },
+          { question: 'Simplify: sin²θ + cos²θ', answer: '1', solution: 'Pythagorean identity: sin²θ + cos²θ = 1 always' },
+          { question: 'Find the 5th term of the sequence: 3, 7, 11, 15, …', answer: '19', solution: 'aₙ = 3 + (n−1)×4 → a₅ = 3 + 16 = 19' }
+        ]
+      }
+    };
+
+    // ---- Resource action ----
+    function downloadResource(id) {
+      const r = resources.find(x => x.id === id);
+      if (r.type === 'cheatsheet' && documentContent[id]) {
+        openDocumentModal(id);
+      } else if (r.type === 'practice' && practiceProblems[id]) {
+        openPracticeModal(id);
+      } else {
+        window.open(r.url, '_blank');
+        showToast(`Opening: ${r.title}`, 'success');
+      }
+    }
+
+    function scrollToCalculator() {
+      document.getElementById('calculatorSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // ---- Document modal ----
+    function openDocumentModal(id) {
+      const doc = documentContent[id];
+      document.getElementById('docTitle').textContent = doc.title;
+      document.getElementById('docContent').innerHTML = doc.content;
+      const modal = document.getElementById('documentModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeDocumentModal() {
+      const modal = document.getElementById('documentModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    // ---- Practice modal ----
+    function openPracticeModal(id) {
+      const practice = practiceProblems[id];
+      document.getElementById('practiceTitle').textContent = practice.title;
+
+      document.getElementById('practiceContent').innerHTML = `
+        <div class="space-y-5">
+          ${practice.problems.map((p, i) => `
+            <div class="p-5 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 rounded-2xl border-2 border-gray-100 dark:border-gray-700">
+              <div class="flex items-start gap-3 mb-3">
+                <span class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center font-bold text-sm flex-shrink-0">${i + 1}</span>
+                <p class="flex-1 font-medium text-gray-900 dark:text-white">${p.question}</p>
+              </div>
+              <input type="text"
+                class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition"
+                placeholder="Your answer..."
+                data-problem-index="${i}"
+                data-correct-answer="${p.answer}">
+              <div class="answer-feedback-${i} mt-3 hidden"></div>
+              <div class="solution-${i} mt-4 hidden p-4 bg-gradient-to-r from-success/10 to-accent/10 rounded-xl border border-success/20">
+                <p class="font-semibold text-success text-sm mb-1">Solution:</p>
+                <p class="text-sm text-gray-700 dark:text-gray-300">${p.solution}</p>
+                <p class="mt-2 font-mono font-bold text-primary text-sm">Answer: ${p.answer}</p>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+
+      const modal = document.getElementById('practiceModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closePracticeModal() {
+      const modal = document.getElementById('practiceModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function checkAnswers() {
+      const inputs = document.querySelectorAll('#practiceContent input[data-problem-index]');
+      let correct = 0;
+      inputs.forEach((input, i) => {
+        const user = input.value.trim().toLowerCase().replace(/\s/g, '');
+        const expected = input.dataset.correctAnswer.toLowerCase().replace(/\s/g, '');
+        const fb = document.querySelector(`.answer-feedback-${i}`);
+        fb.classList.remove('hidden');
+        if (user === expected) {
+          fb.innerHTML = '<p class="text-success font-semibold text-sm">✓ Correct!</p>';
+          fb.className = `answer-feedback-${i} mt-3 p-3 bg-success/10 rounded-xl border border-success/20`;
+          correct++;
+        } else {
+          fb.innerHTML = '<p class="text-error font-semibold text-sm">✗ Incorrect — try again or view the solution.</p>';
+          fb.className = `answer-feedback-${i} mt-3 p-3 bg-error/10 rounded-xl border border-error/20`;
+        }
+      });
+      showToast(`${correct} / ${inputs.length} correct!`, correct === inputs.length ? 'success' : 'info');
+    }
+
+    function showSolutions() {
+      document.querySelectorAll('[class*="solution-"]').forEach(el => el.classList.remove('hidden'));
+      showToast('All solutions revealed!', 'info');
+    }
+
+    // ---- Modal events ----
+    document.getElementById('closeDocModal').addEventListener('click', closeDocumentModal);
+    document.getElementById('closePracticeModal').addEventListener('click', closePracticeModal);
+    document.getElementById('checkAnswers').addEventListener('click', checkAnswers);
+    document.getElementById('showSolutions').addEventListener('click', showSolutions);
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeDocumentModal(); closePracticeModal(); } });
+    document.getElementById('documentModal').addEventListener('click', e => { if (e.target.id === 'documentModal') closeDocumentModal(); });
+    document.getElementById('practiceModal').addEventListener('click', e => { if (e.target.id === 'practiceModal') closePracticeModal(); });
+
+    // ---- Filters ----
+    document.getElementById('searchInput').addEventListener('input', debounce(renderResources, 250));
+    document.getElementById('typeFilter').addEventListener('change', renderResources);
+    document.getElementById('subjectFilter').addEventListener('change', renderResources);
+
+    // ---- Calculator tab switching ----
+    const calcBtns = document.querySelectorAll('.calc-type-btn');
+    const calcPanels = { quadratic: 'quadraticCalc', pythagorean: 'pythagoreanCalc', distance: 'distanceCalc' };
+
+    calcBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        calcBtns.forEach(b => {
+          b.className = 'calc-type-btn px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary transition-all duration-200';
+        });
+        btn.className = 'calc-type-btn px-4 py-2 rounded-xl bg-gradient-to-r from-primary to-secondary text-white text-sm font-medium shadow-lg shadow-primary/20 transition-all duration-200';
+        Object.values(calcPanels).forEach(id => document.getElementById(id).classList.add('hidden'));
+        document.getElementById(calcPanels[btn.dataset.type]).classList.remove('hidden');
+        document.getElementById('calcResult').innerHTML = `<div class="text-center text-gray-400"><svg class="w-14 h-14 mx-auto mb-3 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg><p class="text-sm font-medium">Enter values and click solve</p></div>`;
+      });
+    });
+
+    // ---- Quadratic solver ----
+    document.getElementById('solveQuadratic').addEventListener('click', () => {
+      const a = parseFloat(document.getElementById('calcA').value) || 0;
+      const b = parseFloat(document.getElementById('calcB').value) || 0;
+      const c = parseFloat(document.getElementById('calcC').value) || 0;
+      const result = document.getElementById('calcResult');
+
+      if (a === 0) {
+        result.innerHTML = '<div class="text-center"><p class="text-error font-semibold">a cannot be 0 for a quadratic equation</p></div>';
+        return;
+      }
+
+      const disc = b * b - 4 * a * c;
+      let html = '';
+
+      if (disc > 0) {
+        const x1 = ((-b + Math.sqrt(disc)) / (2 * a)).toFixed(4);
+        const x2 = ((-b - Math.sqrt(disc)) / (2 * a)).toFixed(4);
+        html = `<div class="text-center"><p class="text-sm font-medium text-gray-500 mb-2">Two Real Solutions</p><p class="text-3xl font-bold text-primary mb-1">x = ${x1}</p><p class="text-3xl font-bold text-secondary mb-3">x = ${x2}</p><p class="text-xs text-gray-400">Discriminant: ${disc.toFixed(2)} &gt; 0</p></div>`;
+      } else if (disc === 0) {
+        const x = (-b / (2 * a)).toFixed(4);
+        html = `<div class="text-center"><p class="text-sm font-medium text-gray-500 mb-2">One Real Solution (Double Root)</p><p class="text-3xl font-bold text-primary mb-3">x = ${x}</p><p class="text-xs text-gray-400">Discriminant: 0</p></div>`;
+      } else {
+        const re = (-b / (2 * a)).toFixed(4);
+        const im = (Math.sqrt(-disc) / (2 * a)).toFixed(4);
+        html = `<div class="text-center"><p class="text-sm font-medium text-gray-500 mb-2">Two Complex Solutions</p><p class="text-xl font-bold text-primary mb-1">x = ${re} + ${im}i</p><p class="text-xl font-bold text-secondary mb-3">x = ${re} − ${im}i</p><p class="text-xs text-gray-400">Discriminant: ${disc.toFixed(2)} &lt; 0</p></div>`;
+      }
+
+      result.innerHTML = html;
+    });
+
+    // ---- Pythagorean solver ----
+    document.getElementById('solvePythagorean').addEventListener('click', () => {
+      const aV = document.getElementById('pythA').value;
+      const bV = document.getElementById('pythB').value;
+      const cV = document.getElementById('pythC').value;
+      const result = document.getElementById('calcResult');
+
+      let html = '';
+      if (aV && bV && !cV) {
+        const c = Math.sqrt(parseFloat(aV) ** 2 + parseFloat(bV) ** 2).toFixed(4);
+        html = `<div class="text-center"><p class="text-sm text-gray-500 mb-2">Hypotenuse (c)</p><p class="text-4xl font-bold text-accent">${c}</p></div>`;
+      } else if (aV && cV && !bV) {
+        const b = Math.sqrt(parseFloat(cV) ** 2 - parseFloat(aV) ** 2).toFixed(4);
+        html = `<div class="text-center"><p class="text-sm text-gray-500 mb-2">Side b</p><p class="text-4xl font-bold text-accent">${b}</p></div>`;
+      } else if (bV && cV && !aV) {
+        const a = Math.sqrt(parseFloat(cV) ** 2 - parseFloat(bV) ** 2).toFixed(4);
+        html = `<div class="text-center"><p class="text-sm text-gray-500 mb-2">Side a</p><p class="text-4xl font-bold text-accent">${a}</p></div>`;
+      } else {
+        html = '<div class="text-center"><p class="text-error font-semibold">Leave exactly one field empty to solve for it</p></div>';
+      }
+
+      result.innerHTML = html;
+    });
+
+    // ---- Distance solver ----
+    document.getElementById('solveDistance').addEventListener('click', () => {
+      const x1 = parseFloat(document.getElementById('x1').value) || 0;
+      const y1 = parseFloat(document.getElementById('y1').value) || 0;
+      const x2 = parseFloat(document.getElementById('x2').value) || 0;
+      const y2 = parseFloat(document.getElementById('y2').value) || 0;
+
+      const d = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2).toFixed(4);
+      const mx = ((x1 + x2) / 2).toFixed(2);
+      const my = ((y1 + y2) / 2).toFixed(2);
+
+      document.getElementById('calcResult').innerHTML = `
+        <div class="text-center">
+          <p class="text-sm text-gray-500 mb-2">Distance</p>
+          <p class="text-4xl font-bold text-warning mb-3">${d}</p>
+          <p class="text-sm text-gray-500">Midpoint: (${mx}, ${my})</p>
+        </div>
+      `;
+    });
+
+    // ---- Init ----
+    renderResources();
+
+    // ---- Desmos ----
+    const desmosElt = document.getElementById('desmosCalculator');
+    const desmosCalc = Desmos.GraphingCalculator(desmosElt, {
+      keypad: true,
+      expressions: true,
+      settingsMenu: true,
+      zoomButtons: true,
+      border: false,
+    });
+  </script>
+</body>
+</html>
