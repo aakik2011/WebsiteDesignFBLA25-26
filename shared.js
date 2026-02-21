@@ -9,7 +9,8 @@ function initTheme() {
   const storedTheme = localStorage.getItem('mf_theme') || 'light';
   setTheme(storedTheme);
 
-  if (themeToggle) {
+  if (themeToggle && !themeToggle.dataset.mfInited) {
+    themeToggle.dataset.mfInited = '1';
     themeToggle.addEventListener('click', () => {
       const next = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       setTheme(next);
@@ -280,6 +281,52 @@ function displaySearchResults(results, container) {
 }
 
 // ============================================
+// Activity Logging
+// ============================================
+const ACTIVITY_ICONS = {
+  time:      { emoji: '⏱', color: 'primary' },
+  session:   { emoji: '📚', color: 'accent' },
+  points:    { emoji: '⭐', color: 'warning' },
+  streak:    { emoji: '🔥', color: 'warning' },
+  lesson:    { emoji: '✅', color: 'success' },
+  resource:  { emoji: '📄', color: 'secondary' },
+  community: { emoji: '💬', color: 'primary' },
+  profile:   { emoji: '👤', color: 'secondary' },
+  music:     { emoji: '🎵', color: 'accent' },
+  default:   { emoji: '📌', color: 'primary' }
+};
+
+function logActivity(type, text) {
+  const MAX_ITEMS = 30;
+  const existing = JSON.parse(localStorage.getItem('mf_activity') || '[]');
+  const entry = {
+    id: Date.now(),
+    type: type || 'default',
+    text,
+    timestamp: new Date().toISOString()
+  };
+  const updated = [entry, ...existing].slice(0, MAX_ITEMS);
+  localStorage.setItem('mf_activity', JSON.stringify(updated));
+  // Dispatch event for same-tab listeners
+  window.dispatchEvent(new CustomEvent('mf_activity_updated', { detail: updated }));
+}
+
+function getActivityMeta(type) {
+  return ACTIVITY_ICONS[type] || ACTIVITY_ICONS.default;
+}
+
+function timeAgo(isoString) {
+  const now = Date.now();
+  const then = new Date(isoString).getTime();
+  const diff = Math.floor((now - then) / 1000);
+  if (diff < 60)   return 'just now';
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  const days = Math.floor(diff / 86400);
+  return days === 1 ? 'yesterday' : `${days}d ago`;
+}
+
+// ============================================
 // Utility Functions
 // ============================================
 function debounce(func, wait) {
@@ -335,6 +382,82 @@ function animateCounter(element, target, duration = 1000) {
 }
 
 // ============================================
+// Mobile Navigation (hamburger dropdown)
+// ============================================
+function injectMobileNav() {
+  const header = document.querySelector('header');
+  if (!header) return;
+
+  const desktopNav = header.querySelector('nav[aria-label="Primary"]');
+  if (!desktopNav) return;
+
+  // Collect links from the desktop nav
+  const links = [...desktopNav.querySelectorAll('a')].map(a => ({
+    href: a.getAttribute('href'),
+    text: a.textContent.trim(),
+    active: a.classList.contains('text-primary') || a.classList.contains('bg-gray-100') || a.classList.contains('bg-gray-800')
+  }));
+  if (links.length === 0) return;
+
+  // Find the flex row and its right-side container
+  const flexRow = header.querySelector('.flex.h-16');
+  if (!flexRow) return;
+  const rightDiv = flexRow.lastElementChild;
+
+  // Create hamburger button
+  const hamburger = document.createElement('button');
+  hamburger.type = 'button';
+  hamburger.id = 'mobileMenuBtn';
+  hamburger.className = 'md:hidden p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition';
+  hamburger.setAttribute('aria-label', 'Toggle navigation menu');
+  hamburger.setAttribute('aria-expanded', 'false');
+  hamburger.innerHTML = `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+  </svg>`;
+  rightDiv.insertBefore(hamburger, rightDiv.firstChild);
+
+  // Create dropdown appended inside the inner container (below the flex row)
+  const innerContainer = header.querySelector('.max-w-7xl');
+  if (!innerContainer) return;
+
+  const mobileMenu = document.createElement('div');
+  mobileMenu.id = 'mobileDropdown';
+  mobileMenu.className = 'md:hidden border-t border-gray-100 dark:border-gray-800 pb-2 pt-1';
+  mobileMenu.style.display = 'none';
+  mobileMenu.innerHTML = `<nav class="px-1 space-y-0.5" aria-label="Mobile navigation">
+    ${links.map(link => `
+      <a href="${link.href}" class="block px-4 py-2.5 text-sm font-medium rounded-lg transition ${link.active ? 'bg-gray-100 dark:bg-gray-800 text-primary' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-primary'}">
+        ${link.text}
+      </a>`).join('')}
+  </nav>`;
+  innerContainer.appendChild(mobileMenu);
+
+  // Toggle
+  let open = false;
+  const svgPath = hamburger.querySelector('path');
+
+  hamburger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    open = !open;
+    mobileMenu.style.display = open ? 'block' : 'none';
+    hamburger.setAttribute('aria-expanded', open.toString());
+    svgPath.setAttribute('d', open
+      ? 'M6 18L18 6M6 6l12 12'
+      : 'M4 6h16M4 12h16M4 18h16');
+  });
+
+  // Close on outside click
+  document.addEventListener('click', () => {
+    if (open) {
+      open = false;
+      mobileMenu.style.display = 'none';
+      hamburger.setAttribute('aria-expanded', 'false');
+      svgPath.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+    }
+  });
+}
+
+// ============================================
 // Navigation Highlight
 // ============================================
 function highlightCurrentNav() {
@@ -357,6 +480,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initMobileMenu();
   initSearch();
   highlightCurrentNav();
+  injectMobileNav();
 
   // Set current year in footer
   const yearEl = document.getElementById('year');

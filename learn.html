@@ -195,12 +195,15 @@
     </div>
   </footer>
 
+  <script src="shared.js"></script>
   <script>
     // ADD YOUR GOOGLE GEMINI API KEY HERE
     const key = 'AIzaSyAQip6Nv16hv29lXI43lqEBP1RTyGwqw-0';
 
     let qs = [];
     let s = {c:0, w:0};
+    let _learnTopic = '';
+    let _learnDiff = '';
 
     document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -249,6 +252,8 @@
         alert('Please fill in all fields');
         return;
       }
+      _learnTopic = topic;
+      _learnDiff = diff;
 
       document.getElementById('empty').classList.add('hidden');
       document.getElementById('loading').classList.remove('hidden');
@@ -299,6 +304,9 @@
         await new Promise(resolve => setTimeout(resolve, 300));
 
         show();
+        if (typeof logActivity === 'function') {
+          logActivity('lesson', `Generated ${num} ${diff} questions on "${topic}"`);
+        }
       } catch (e) {
         document.getElementById('loading').classList.add('hidden');
         document.getElementById('empty').classList.remove('hidden');
@@ -341,7 +349,14 @@
     window.ans = (i,a) => {
       const q = qs[i];
       const ok = a === q.ans;
-      if (ok) s.c++; else s.w++;
+      if (ok) {
+        s.c++;
+        if (typeof logActivity === 'function') {
+          logActivity('lesson', `Correct answer on "${_learnTopic}" (${_learnDiff})`);
+        }
+      } else {
+        s.w++;
+      }
 
       const div = document.getElementById(`q${i}`);
       div.querySelectorAll('.btn').forEach(b => {
@@ -396,6 +411,7 @@
     }
 
     setTheme(theme);
+    themeToggle.dataset.mfInited = '1';
     themeToggle.onclick = () => setTheme(body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
   </script>
 </body>

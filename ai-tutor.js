@@ -36,13 +36,16 @@ function saveAISettings() {
 
 function initTheme() {
   const themeToggle = document.getElementById('themeToggle');
+  if (!themeToggle || themeToggle.dataset.mfInited) return;
+  themeToggle.dataset.mfInited = '1';
+
   const body = document.body;
   const storedTheme = localStorage.getItem('mf_theme') || 'light';
 
   // Set initial theme
   setTheme(storedTheme);
 
-  // Add click listener
+  // Add click listener (only once)
   themeToggle.addEventListener('click', () => {
     const next = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     setTheme(next);
@@ -278,6 +281,12 @@ document.getElementById('chatForm').addEventListener('submit', async (e) => {
   // Add user message
   addMessageToUI('user', message);
   input.value = '';
+
+  // Log activity
+  if (typeof logActivity === 'function') {
+    const preview = message.length > 55 ? message.substring(0, 55) + '…' : message;
+    logActivity('lesson', `Asked AI Tutor: "${preview}"`);
+  }
 
   // Show typing indicator
   const sendBtn = document.getElementById('sendBtn');

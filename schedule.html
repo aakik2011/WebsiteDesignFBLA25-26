@@ -500,26 +500,41 @@
         `;
       }).join('');
 
-      // Add event listeners
+      // Register buttons
       list.querySelectorAll('.register-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           const id = parseInt(btn.dataset.sessionId);
           toggleRegistration(id);
         });
       });
+
+      // Zoom buttons
+      list.querySelectorAll('.zoom-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          window.open('https://zoom.new', '_blank');
+        });
+      });
     }
 
     function toggleRegistration(id) {
+      const session = sessions.find(s => s.id === id);
       if (registered.has(id)) {
         registered.delete(id);
         showToast('Unregistered from session', 'info');
+        if (session) logActivity('session', `Unregistered from "${session.title}"`);
       } else {
         registered.add(id);
         showToast('Successfully registered!', 'success');
+        if (session) {
+          const dateStr = session.date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+          const timeStr = session.date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+          logActivity('session', `Registered for "${session.title}" — ${dateStr} at ${timeStr}`);
+        }
       }
       localStorage.setItem('mf_registered', JSON.stringify(Array.from(registered)));
       renderSessions();
       renderMySessions();
+      renderWeekSchedule();
     }
 
     // My sessions rendering
@@ -548,7 +563,7 @@
       }).join('');
     }
 
-    // Week schedule rendering
+    // Week schedule rendering — only show registered sessions
     function renderWeekSchedule() {
       const container = document.getElementById('weekSchedule');
       const today = new Date();
@@ -562,27 +577,39 @@
 
       const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-      container.innerHTML = weekDays.map((date, i) => {
-        const daySessions = sessions.filter(s => s.date.toDateString() === date.toDateString());
-        const isToday = i === 0;
+      const hasAny = weekDays.some(date =>
+        sessions.some(s => registered.has(s.id) && s.date.toDateString() === date.toDateString())
+      );
 
+      if (!hasAny) {
+        container.innerHTML = '<p class="text-sm text-center py-4" style="color: rgba(255,255,255,0.5)">Register for sessions to see them here</p>';
+        return;
+      }
+
+      container.innerHTML = weekDays.map((date, i) => {
+        const daySessions = sessions.filter(s => registered.has(s.id) && s.date.toDateString() === date.toDateString());
+        if (daySessions.length === 0) return '';
+        const isToday = i === 0;
         return `
           <div class="flex items-center gap-3 p-2 rounded-lg ${isToday ? 'bg-primary/10' : ''}">
-            <div class="w-12 text-center">
+            <div class="w-12 text-center flex-shrink-0">
               <div class="text-xs" style="color: rgba(255,255,255,0.6)">${dayNames[date.getDay()]}</div>
               <div class="text-lg font-semibold" style="color: ${isToday ? '#6366f1' : 'white'}">${date.getDate()}</div>
             </div>
-            <div class="flex-1">
-              ${daySessions.length > 0 ? daySessions.map(s => `
-                <div class="text-sm flex items-center gap-2">
-                  <div class="w-1.5 h-1.5 rounded-full ${subjectColors[s.subject]}"></div>
-                  <span class="truncate" style="color: white">${s.title}</span>
-                </div>
-              `).join('') : '<span class="text-xs" style="color: rgba(255,255,255,0.5)">No sessions</span>'}
+            <div class="flex-1 min-w-0">
+              ${daySessions.map(s => {
+                const timeStr = s.date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+                return `
+                  <div class="text-sm flex items-center gap-2">
+                    <div class="w-1.5 h-1.5 rounded-full flex-shrink-0 ${subjectColors[s.subject]}"></div>
+                    <span class="truncate" style="color: white">${s.title}</span>
+                    <span class="text-xs flex-shrink-0" style="color: rgba(255,255,255,0.6)">${timeStr}</span>
+                  </div>`;
+              }).join('')}
             </div>
           </div>
         `;
-      }).join('');
+      }).filter(Boolean).join('');
     }
 
     // Modal handling

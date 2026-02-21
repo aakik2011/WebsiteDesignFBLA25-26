@@ -373,6 +373,7 @@
     themeToggle.addEventListener('click', () => {
       setTheme(bodyEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
     });
+    themeToggle.dataset.mfInited = '1';
 
     // ---- Time-based greeting ----
     const hour = new Date().getHours();
@@ -407,6 +408,10 @@
         if (totalSeconds % 10 === 0) {
           localStorage.setItem(KEYS.time, totalSeconds.toString());
           displayTime();
+        }
+        if (totalSeconds % 60 === 0) {
+          checkTimeMilestones();
+          maybeLogSession();
         }
       }
     }
@@ -550,10 +555,168 @@
       lofiAudio.volume = e.target.value / 100;
     });
 
+    // ---- Activity Rendering ----
+    const COLOR_MAP = {
+      primary:   'bg-primary/10 text-primary',
+      secondary: 'bg-secondary/10 text-secondary',
+      accent:    'bg-accent/10 text-accent',
+      success:   'bg-success/10 text-success',
+      warning:   'bg-warning/10 text-warning',
+      error:     'bg-error/10 text-error'
+    };
+
+    function renderActivity() {
+      const list = document.getElementById('activityList');
+      const stored = JSON.parse(localStorage.getItem(KEYS.activity) || '[]');
+      activity = stored;
+
+      if (!stored.length) {
+        list.innerHTML = `
+          <div class="flex flex-col items-center justify-center py-12 text-gray-400">
+            <svg class="w-12 h-12 mb-3 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+            <p class="text-sm font-medium">No activity yet</p>
+            <p class="text-xs mt-1 opacity-70">Start studying to see your progress here</p>
+          </div>`;
+        return;
+      }
+
+      list.innerHTML = stored.slice(0, 15).map(item => {
+        const meta = getActivityMeta(item.type);
+        const colorClass = COLOR_MAP[meta.color] || COLOR_MAP.primary;
+        return `
+          <div class="flex items-start gap-3 py-3 border-b border-gray-100 dark:border-gray-700 last:border-0 activity-item" data-id="${item.id}">
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center text-base shrink-0 ${colorClass}">
+              ${meta.emoji}
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm text-gray-800 dark:text-gray-200 leading-snug">${item.text}</p>
+              <p class="text-xs text-gray-400 mt-0.5 activity-ts" data-ts="${item.timestamp}">${timeAgo(item.timestamp)}</p>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function refreshTimestamps() {
+      document.querySelectorAll('.activity-ts[data-ts]').forEach(el => {
+        el.textContent = timeAgo(el.dataset.ts);
+      });
+    }
+
+    // ---- Activity Logging Helpers ----
+    function logDashboardActivity(type, text) {
+      logActivity(type, text);
+      renderActivity();
+    }
+
+    // ---- Time milestone tracking ----
+    const TIME_MILESTONES = [1800, 3600, 7200, 10800]; // 30m, 1h, 2h, 3h
+    const reachedMilestones = new Set(
+      JSON.parse(localStorage.getItem('mf_milestones_today') || '[]')
+    );
+
+    function checkTimeMilestones() {
+      const today = new Date().toDateString();
+      const savedDay = localStorage.getItem('mf_milestones_day');
+      if (savedDay !== today) {
+        reachedMilestones.clear();
+        localStorage.setItem('mf_milestones_day', today);
+        localStorage.setItem('mf_milestones_today', '[]');
+      }
+
+      TIME_MILESTONES.forEach(secs => {
+        if (totalSeconds >= secs && !reachedMilestones.has(secs)) {
+          reachedMilestones.add(secs);
+          localStorage.setItem('mf_milestones_today', JSON.stringify([...reachedMilestones]));
+          const label = secs < 3600 ? `${secs / 60} minutes` : `${secs / 3600} hour${secs > 3600 ? 's' : ''}`;
+          logDashboardActivity('time', `Studied for ${label} today`);
+
+          // Award points for time milestones
+          points += 10;
+          localStorage.setItem(KEYS.points, points.toString());
+          displayStats();
+          logDashboardActivity('points', `Earned 10 points for studying ${label}`);
+        }
+      });
+    }
+
+    // ---- Log a session once per day ----
+    let sessionLogged = false;
+    function maybeLogSession() {
+      if (!sessionLogged && totalSeconds >= 60) {
+        sessionLogged = true;
+        const today = new Date().toDateString();
+        if (localStorage.getItem('mf_session_day') !== today) {
+          localStorage.setItem('mf_session_day', today);
+          sessions++;
+          localStorage.setItem(KEYS.sessions, sessions.toString());
+          displayStats();
+          const startTime = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+          logDashboardActivity('session', `Study session started at ${startTime}`);
+        }
+      }
+    }
+
+    // ---- Profile save activity ----
+    document.getElementById('saveProfile').addEventListener('click', () => {
+      logDashboardActivity('profile', `Updated profile name to "${document.getElementById('nameInput').value || 'Student'}"`);
+    }, true);
+
+    // ---- Music start activity ----
+    let musicLogged = false;
+    musicToggle.addEventListener('click', () => {
+      if (!isPlaying && !musicLogged) {
+        musicLogged = true;
+        setTimeout(() => logDashboardActivity('music', 'Started lofi study music'), 300);
+      }
+    }, true);
+
+    // ---- Streak log on first load ----
+    function logStreakIfNew() {
+      const today = new Date().toDateString();
+      const lastStreakLog = localStorage.getItem('mf_streak_logged_day');
+      if (lastStreakLog !== today && streak.count > 0) {
+        localStorage.setItem('mf_streak_logged_day', today);
+        logDashboardActivity('streak', `Day ${streak.count} streak — keep it up!`);
+      }
+    }
+
+    // ---- Real-time updates via storage events (cross-tab) ----
+    window.addEventListener('storage', (e) => {
+      if (e.key === KEYS.activity) {
+        renderActivity();
+      }
+      if (e.key === KEYS.time) {
+        totalSeconds = parseInt(e.newValue || '0');
+        displayTime();
+      }
+      if (e.key === KEYS.sessions) {
+        sessions = parseInt(e.newValue || '0');
+        document.getElementById('sessionsDisplay').textContent = sessions;
+      }
+      if (e.key === KEYS.points) {
+        points = parseInt(e.newValue || '0');
+        document.getElementById('pointsDisplay').textContent = points;
+      }
+      if (e.key === KEYS.streak) {
+        streak = JSON.parse(e.newValue || '{"count":0,"lastDate":""}');
+        document.getElementById('streakDisplay').textContent = streak.count;
+      }
+    });
+
+    // Same-tab activity events
+    window.addEventListener('mf_activity_updated', () => renderActivity());
+
     // ---- Initialize ----
     updateStreak();
     displayStats();
     displayTime();
-  </script>
+    renderActivity();
+    logStreakIfNew();
+
+    // Refresh relative timestamps every minute
+    setInterval(refreshTimestamps, 60000);
+</script>
 </body>
 </html>
