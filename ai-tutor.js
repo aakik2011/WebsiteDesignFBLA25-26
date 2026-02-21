@@ -1,5 +1,5 @@
 // ADD YOUR GOOGLE GEMINI API KEY HERE
-const GEMINI_API_KEY = 'AIzaSyAQip6Nv16hv29lXI43lqEBP1RTyGwqw-0';
+const GEMINI_API_KEY = 'AIzaSyC9Vp6Nn2oByRM-aZz4O92QQC7o2s4go_8';
 
 const AI_SETTINGS_KEY = 'mf_ai_settings';
 const CHAT_HISTORY_KEY = 'mf_chat_history';
