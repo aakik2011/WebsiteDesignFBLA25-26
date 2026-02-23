@@ -280,6 +280,52 @@
     </div>
   </div>
 
+  <!-- Discussion Detail Modal -->
+  <div id="discussionDetailModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+    <div class="w-full max-w-2xl max-h-[90vh] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl flex flex-col">
+      <!-- Header -->
+      <div class="p-5 border-b border-gray-100 dark:border-gray-800 flex items-start justify-between gap-4">
+        <div class="flex-1 min-w-0">
+          <div id="detailTopic" class="flex items-center gap-2 mb-2"></div>
+          <h3 id="detailTitle" class="text-xl font-heading font-bold text-gray-900 dark:text-white leading-snug"></h3>
+          <div class="flex items-center gap-2 mt-2 text-sm text-gray-500 dark:text-gray-400">
+            <span id="detailAuthorInitials" class="w-6 h-6 rounded-md text-white text-xs flex items-center justify-center font-semibold"></span>
+            <span id="detailAuthor" class="font-medium text-gray-700 dark:text-gray-300"></span>
+            <span>&bull;</span>
+            <span id="detailTime"></span>
+          </div>
+        </div>
+        <button id="closeDetailModal" class="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 transition shrink-0">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <!-- Content + Replies -->
+      <div class="flex-1 overflow-y-auto p-5 space-y-5">
+        <div id="detailContent" class="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl text-gray-700 dark:text-gray-300 text-sm leading-relaxed"></div>
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+          </svg>
+          <h4 class="font-semibold text-gray-900 dark:text-white text-sm">Replies</h4>
+          <span id="detailReplyCount" class="text-xs text-gray-400 dark:text-gray-500"></span>
+        </div>
+        <div id="detailRepliesList" class="space-y-3"></div>
+      </div>
+      <!-- Reply input -->
+      <div class="p-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 rounded-b-2xl">
+        <div class="flex gap-2">
+          <input type="text" id="replyInput" placeholder="Write a reply..."
+            class="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition text-sm">
+          <button id="submitReply" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-semibold text-sm hover:opacity-90 transition">
+            Reply
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer class="mt-12 border-t border-gray-100 dark:border-gray-800">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
@@ -335,14 +381,41 @@
     })();
 
     // ---- Data ----
-    const discussions = [
-      { id: 1, title: 'How do I solve this quadratic equation?', topic: 'algebra', author: 'Alex Chen', authorInitials: 'AC', time: '2 hours ago', replies: 5, views: 42, solved: true },
-      { id: 2, title: 'Circle theorem proof help needed', topic: 'geometry', author: 'Maria Rodriguez', authorInitials: 'MR', time: '4 hours ago', replies: 3, views: 28, solved: false },
-      { id: 3, title: 'Best way to remember trig identities?', topic: 'precalc', author: 'James Wilson', authorInitials: 'JW', time: '6 hours ago', replies: 12, views: 89, solved: true },
-      { id: 4, title: 'Study group for SAT math prep', topic: 'general', author: 'Sarah Kim', authorInitials: 'SK', time: '1 day ago', replies: 8, views: 156, solved: false },
-      { id: 5, title: 'Factoring trinomials - step by step guide request', topic: 'algebra', author: 'David Lee', authorInitials: 'DL', time: '1 day ago', replies: 4, views: 67, solved: true },
-      { id: 6, title: 'Understanding limits approaching infinity', topic: 'precalc', author: 'Emily Chen', authorInitials: 'EC', time: '2 days ago', replies: 7, views: 93, solved: false },
+    const DEFAULT_DISCUSSIONS = [
+      { id: 1, title: 'How do I solve this quadratic equation?', content: "I have x² + 5x + 6 = 0 and I'm not sure which method to use. Should I factor or use the quadratic formula? Any step-by-step help would be great!", topic: 'algebra', author: 'Alex Chen', authorInitials: 'AC', timestamp: new Date(Date.now() - 7200000).toISOString(), time: '2 hours ago', replies: 5, views: 42, solved: true },
+      { id: 2, title: 'Circle theorem proof help needed', content: "I'm struggling with the inscribed angle theorem. Can someone explain why the inscribed angle is exactly half the central angle subtending the same arc?", topic: 'geometry', author: 'Maria Rodriguez', authorInitials: 'MR', timestamp: new Date(Date.now() - 14400000).toISOString(), time: '4 hours ago', replies: 3, views: 28, solved: false },
+      { id: 3, title: 'Best way to remember trig identities?', content: "I always blank on sin²θ + cos²θ = 1 and the double-angle formulas during tests. Does anyone have good memory tricks or mnemonic devices that actually work?", topic: 'precalc', author: 'James Wilson', authorInitials: 'JW', timestamp: new Date(Date.now() - 21600000).toISOString(), time: '6 hours ago', replies: 12, views: 89, solved: true },
+      { id: 4, title: 'Study group for SAT math prep', content: "Looking for motivated students to join a weekly SAT math study group. We'll cover everything from algebra to data analysis. DM me if interested — aiming for 750+!", topic: 'general', author: 'Sarah Kim', authorInitials: 'SK', timestamp: new Date(Date.now() - 86400000).toISOString(), time: '1 day ago', replies: 8, views: 156, solved: false },
+      { id: 5, title: 'Factoring trinomials — step by step guide request', content: "Can someone walk me through factoring ax² + bx + c when a ≠ 1? I get confused with the AC method vs grouping. Which is faster for tests?", topic: 'algebra', author: 'David Lee', authorInitials: 'DL', timestamp: new Date(Date.now() - 86400000).toISOString(), time: '1 day ago', replies: 4, views: 67, solved: true },
+      { id: 6, title: 'Understanding limits approaching infinity', content: "What does it actually mean for a limit to approach infinity? My teacher explained L'Hôpital's rule but I'm still confused about when to apply it versus direct substitution.", topic: 'precalc', author: 'Emily Chen', authorInitials: 'EC', timestamp: new Date(Date.now() - 172800000).toISOString(), time: '2 days ago', replies: 7, views: 93, solved: false },
     ];
+
+    function loadDiscussions() {
+      const stored = localStorage.getItem('mf_discussions');
+      if (stored) return JSON.parse(stored);
+      localStorage.setItem('mf_discussions', JSON.stringify(DEFAULT_DISCUSSIONS));
+      return [...DEFAULT_DISCUSSIONS];
+    }
+
+    function saveDiscussions() {
+      localStorage.setItem('mf_discussions', JSON.stringify(discussions));
+    }
+
+    // ---- Get current user from dashboard profile ----
+    function getCurrentUser() {
+      const profile = JSON.parse(localStorage.getItem('mf_profile') || '{}');
+      if (profile && profile.name) {
+        const initials = profile.initials || profile.name.split(' ').filter(Boolean).map(n => n[0]).join('').toUpperCase().slice(0, 2);
+        return { name: profile.name, initials };
+      }
+      if (typeof userState !== 'undefined' && userState.name) {
+        const name = userState.name;
+        return { name, initials: name.split(' ').filter(Boolean).map(n => n[0]).join('').toUpperCase().slice(0, 2) };
+      }
+      return { name: 'You', initials: 'Y' };
+    }
+
+    let discussions = loadDiscussions();
 
     const tutors = [
       { id: 1, name: 'Alex Chen', initials: 'AC', subjects: ['Algebra', 'Pre-Calculus'], rating: 4.9, sessions: 156, rate: 'Free', online: true },
@@ -406,7 +479,7 @@
               <div class="flex flex-wrap items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                 <span>${d.author}</span>
                 <span>&bull;</span>
-                <span>${d.time}</span>
+                <span>${d.timestamp ? timeAgo(d.timestamp) : d.time}</span>
                 <span>&bull;</span>
                 <span class="px-2 py-0.5 rounded-full text-xs capitalize font-medium" style="background-color: ${topicColor.hex}20; color: ${topicColor.hex}">${d.topic}</span>
               </div>
@@ -616,31 +689,187 @@
 
     newPostForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const title = document.getElementById('postTitle').value;
+      const title = document.getElementById('postTitle').value.trim();
       const topic = document.getElementById('postTopic').value;
+      const content = document.getElementById('postContent').value.trim();
 
-      const authorName = (typeof userState !== 'undefined' && userState.name) ? userState.name : 'Anonymous';
-      discussions.unshift({
+      const user = getCurrentUser();
+      const newDiscussion = {
         id: Date.now(),
         title,
+        content,
         topic,
-        author: authorName,
-        authorInitials: authorName.split(' ').map(n => n[0]).join('').toUpperCase(),
+        author: user.name,
+        authorInitials: user.initials,
+        timestamp: new Date().toISOString(),
         time: 'Just now',
         replies: 0,
         views: 1,
         solved: false
-      });
+      };
+
+      discussions.unshift(newDiscussion);
+      saveDiscussions();
+
+      // Notify other open tabs instantly
+      if (window._mfChannel) {
+        window._mfChannel.postMessage({ type: 'new_discussion', discussion: newDiscussion });
+      }
 
       closeModal();
       renderDiscussions();
       showToast('Discussion posted!', 'success');
     });
 
-    // ---- Action handlers ----
-    function openDiscussion(id) {
-      showToast('Opening discussion...', 'info');
+    // ---- Discussion detail ----
+    let currentDiscussionId = null;
+
+    function loadReplies(discussionId) {
+      const all = JSON.parse(localStorage.getItem('mf_replies') || '{}');
+      return all[String(discussionId)] || [];
     }
+
+    function saveReply(discussionId, reply) {
+      const all = JSON.parse(localStorage.getItem('mf_replies') || '{}');
+      const key = String(discussionId);
+      if (!all[key]) all[key] = [];
+      all[key].push(reply);
+      localStorage.setItem('mf_replies', JSON.stringify(all));
+      return all[key];
+    }
+
+    function renderReplies(replies) {
+      const list = document.getElementById('detailRepliesList');
+      if (!replies.length) {
+        list.innerHTML = '<p class="text-sm text-gray-400 italic text-center py-6">No replies yet — be the first to reply!</p>';
+        return;
+      }
+      const disc = discussions.find(d => d.id === currentDiscussionId);
+      const col = (disc && topicColors[disc.topic]) ? topicColors[disc.topic].hex : '#6366f1';
+      list.innerHTML = replies.map(r => `
+        <div class="flex gap-3">
+          <div class="w-8 h-8 rounded-lg text-white flex items-center justify-center text-xs font-semibold shrink-0" style="background-color:${col}">
+            ${r.authorInitials}
+          </div>
+          <div class="flex-1 bg-gray-50 dark:bg-gray-800 rounded-xl p-3">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="font-semibold text-sm text-gray-900 dark:text-white">${r.author}</span>
+              <span class="text-xs text-gray-400 dark:text-gray-500">${timeAgo(r.timestamp)}</span>
+            </div>
+            <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">${r.content}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openDiscussion(id) {
+      const discussion = discussions.find(d => d.id === id);
+      if (!discussion) return;
+
+      currentDiscussionId = id;
+      discussion.views = (discussion.views || 0) + 1;
+      saveDiscussions();
+
+      const topicColor = topicColors[discussion.topic] || { hex: '#6366f1' };
+
+      document.getElementById('detailTitle').textContent = discussion.title;
+      document.getElementById('detailAuthor').textContent = discussion.author;
+      document.getElementById('detailTime').textContent = discussion.timestamp ? timeAgo(discussion.timestamp) : discussion.time;
+      document.getElementById('detailContent').textContent = discussion.content || 'No description provided.';
+
+      const initEl = document.getElementById('detailAuthorInitials');
+      initEl.textContent = discussion.authorInitials;
+      initEl.style.backgroundColor = topicColor.hex;
+
+      const topicEl = document.getElementById('detailTopic');
+      topicEl.innerHTML = `<span class="px-2.5 py-0.5 rounded-full text-xs font-medium capitalize" style="background-color:${topicColor.hex}20;color:${topicColor.hex}">${discussion.topic}</span>`;
+      if (discussion.solved) {
+        topicEl.innerHTML += ' <span class="px-2.5 py-0.5 text-xs rounded-full bg-success/10 text-success font-medium">Solved</span>';
+      }
+
+      const replies = loadReplies(id);
+      document.getElementById('detailReplyCount').textContent = `(${replies.length})`;
+      renderReplies(replies);
+
+      const modal = document.getElementById('discussionDetailModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.getElementById('replyInput').value = '';
+      document.getElementById('replyInput').focus();
+    }
+
+    function closeDetailModal() {
+      const modal = document.getElementById('discussionDetailModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      currentDiscussionId = null;
+      renderDiscussions();
+    }
+
+    // ---- Reply submission ----
+    function submitReply() {
+      if (!currentDiscussionId) return;
+      const input = document.getElementById('replyInput');
+      const content = input.value.trim();
+      if (!content) return;
+
+      const user = getCurrentUser();
+      const reply = {
+        id: Date.now(),
+        author: user.name,
+        authorInitials: user.initials,
+        content,
+        timestamp: new Date().toISOString()
+      };
+
+      const allReplies = saveReply(currentDiscussionId, reply);
+      const disc = discussions.find(d => d.id === currentDiscussionId);
+      if (disc) {
+        disc.replies = allReplies.length;
+        saveDiscussions();
+      }
+
+      document.getElementById('detailReplyCount').textContent = `(${allReplies.length})`;
+      renderReplies(allReplies);
+      input.value = '';
+
+      if (window._mfChannel) {
+        window._mfChannel.postMessage({ type: 'new_reply', discussionId: currentDiscussionId, reply });
+      }
+      showToast('Reply posted!', 'success');
+    }
+
+    document.getElementById('submitReply').addEventListener('click', submitReply);
+    document.getElementById('replyInput').addEventListener('keydown', e => { if (e.key === 'Enter') submitReply(); });
+    document.getElementById('closeDetailModal').addEventListener('click', closeDetailModal);
+    document.getElementById('discussionDetailModal').addEventListener('click', e => { if (e.target.id === 'discussionDetailModal') closeDetailModal(); });
+
+    // ---- BroadcastChannel: real-time cross-tab sync ----
+    if ('BroadcastChannel' in window) {
+      window._mfChannel = new BroadcastChannel('mf_community');
+      window._mfChannel.addEventListener('message', e => {
+        const { type, discussion, discussionId, reply } = e.data;
+        if (type === 'new_discussion' && discussion) {
+          discussions.unshift(discussion);
+          renderDiscussions();
+          showToast('New discussion just posted!', 'info');
+        } else if (type === 'new_reply' && reply) {
+          if (currentDiscussionId === discussionId) {
+            const replies = loadReplies(discussionId);
+            renderReplies(replies);
+            document.getElementById('detailReplyCount').textContent = `(${replies.length})`;
+          }
+          const disc = discussions.find(d => d.id === discussionId);
+          if (disc) {
+            const replies = loadReplies(discussionId);
+            disc.replies = replies.length;
+            renderDiscussions();
+          }
+        }
+      });
+    }
+
+    // ---- Action handlers ----
 
     function requestTutor(id) {
       const tutor = tutors.find(t => t.id === id);
@@ -665,7 +894,7 @@
     });
 
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeModal();
+      if (e.key === 'Escape') { closeModal(); closeDetailModal(); }
     });
 
     // ---- Initialize ----
