@@ -1,8 +1,10 @@
 // ADD YOUR GOOGLE GEMINI API KEY HERE
 const GEMINI_API_KEY = 'AIzaSyC9Vp6Nn2oByRM-aZz4O92QQC7o2s4go_8';
 
-const AI_SETTINGS_KEY = 'mf_ai_settings';
-const CHAT_HISTORY_KEY = 'mf_chat_history';
+const _aiEmail = localStorage.getItem('mf_currentUser') || 'guest';
+const AI_SETTINGS_KEY = `mf_ai_settings_${_aiEmail}`;
+const CHAT_HISTORY_KEY = `mf_chat_history_${_aiEmail}`;
+const AI_CONFIGURED_KEY = `mf_ai_configured_${_aiEmail}`;
 
 let aiSettings = {
   mode: 'gemini',
@@ -132,7 +134,7 @@ document.getElementById('aiSettingsForm').addEventListener('submit', (e) => {
 
 // Start chat button
 document.getElementById('startChatBtn').addEventListener('click', () => {
-  localStorage.setItem('mf_ai_configured', 'true');
+  localStorage.setItem(AI_CONFIGURED_KEY, 'true');
   closeModal('aiWelcomeModal');
   saveAISettings();
   updateModeIndicator();
@@ -411,7 +413,7 @@ loadAISettings();
 updateModeIndicator();
 
 // Check if this is first time
-const hasConfigured = localStorage.getItem('mf_ai_configured');
+const hasConfigured = localStorage.getItem(AI_CONFIGURED_KEY);
 if (!hasConfigured) {
   openModal('aiWelcomeModal');
 } else {

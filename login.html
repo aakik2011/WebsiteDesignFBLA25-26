@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MathFlow — Sign In</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#6366f1',
+            secondary: '#8b5cf6',
+            accent: '#06b6d4',
+            success: '#10b981',
+            warning: '#f59e0b',
+            error: '#ef4444',
+            bgLight: '#fafafa',
+            cardLight: '#ffffff',
+            bgDark: '#0f0f0f',
+            cardDark: '#1a1a1a',
+          },
+          borderRadius: { 'card': '8px', 'btn': '6px' }
+        },
+        fontFamily: {
+          sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+          heading: ['Space Grotesk', 'Inter', 'ui-sans-serif']
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .input-field {
+      width: 100%;
+      padding: 0.625rem 0.875rem;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      background: transparent;
+      color: inherit;
+    }
+    .input-field:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
+    }
+    [data-theme="dark"] .input-field {
+      border-color: #374151;
+      background: #1f2937;
+      color: #f9fafb;
+    }
+    [data-theme="dark"] .input-field:focus {
+      border-color: #6366f1;
+    }
+    .form-panel { transition: opacity 0.2s, transform 0.2s; }
+    .strength-bar { height: 4px; border-radius: 2px; transition: width 0.3s, background 0.3s; }
+  </style>
+</head>
+<body class="antialiased bg-bgLight text-gray-900" data-theme="light">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 backdrop-blur bg-white/80 dark:bg-black/80 border-b border-gray-100 dark:border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center justify-between">
+        <a href="index.html" class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-heading font-bold">M</div>
+          <div class="hidden sm:block">
+            <span class="block font-heading text-lg text-gray-900 dark:text-white">MathFlow</span>
+            <span class="text-sm text-gray-500">Design to Learn</span>
+          </div>
+        </a>
+        <button id="themeToggle" class="p-2 rounded-md focus-ring" aria-pressed="false" title="Toggle theme">
+          <svg id="themeIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.66-10.66h-1M4.34 12.34h-1M18.36 18.36l-.7-.7M6.34 6.34l-.7-.7M18.36 5.64l-.7.7M6.34 17.66l-.7.7M12 8a4 4 0 100 8 4 4 0 000-8z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="min-h-screen flex items-center justify-center px-4 py-12">
+    <!-- Background gradient -->
+    <div class="fixed inset-0 -z-10 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 pointer-events-none"></div>
+
+    <div class="w-full max-w-md">
+      <!-- Logo / Title -->
+      <div class="text-center mb-8 fade-in">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-heading font-bold text-2xl mx-auto mb-4">M</div>
+        <h1 class="text-2xl font-heading font-bold text-gray-900 dark:text-white" id="pageTitle"><p style="color: black;">Welcome back</p></h1>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400" id="pageSubtitle"><p style="color: black;">Sign in to your MathFlow account</p></p>
+      </div>
+
+      <!-- Card -->
+      <div class="bg-cardLight dark:bg-cardDark rounded-2xl shadow-xl p-8 fade-in">
+
+        <!-- Tab Toggle -->
+        <div class="flex rounded-lg bg-gray-100 dark:bg-gray-800 p-1 mb-6">
+          <button id="tabSignIn" class="flex-1 py-2 text-sm font-semibold rounded-md bg-white dark:bg-gray-700 text-primary shadow-sm transition" onclick="switchTab('signin')">Sign In</button>
+          <button id="tabSignUp" class="flex-1 py-2 text-sm font-semibold rounded-md text-gray-500 dark:text-gray-400 transition hover:text-gray-700 dark:hover:text-gray-200" onclick="switchTab('signup')">Create Account</button>
+        </div>
+
+        <!-- Sign In Form -->
+        <form id="signinForm" class="form-panel space-y-4" novalidate>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5" for="signinEmail">Email address</label>
+            <input id="signinEmail" type="email" class="input-field" style = "color: white;" placeholder="you@example.com" autocomplete="email" required />
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="signinPassword">Password</label>
+            </div>
+            <div class="relative">
+              <input id="signinPassword" type="password" class="input-field pr-10" style = "color: white;" placeholder="Enter your password" autocomplete="current-password" required />
+              <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" onclick="togglePasswordVisibility('signinPassword', this)" tabindex="-1">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              </button>
+            </div>
+          </div>
+          <p id="signinError" class="text-sm text-error hidden"></p>
+          <button type="submit" class="w-full py-2.5 rounded-btn bg-primary text-white font-semibold hover:opacity-90 transition btn-primary mt-2">
+            Sign In
+          </button>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="signupForm" class="form-panel space-y-4 hidden" novalidate>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5" for="signupName">Full name</label>
+            <input id="signupName" style = "color: white;" type="text" class="input-field" placeholder="Alex Johnson" autocomplete="name" required />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5" for="signupEmail">Email address</label>
+            <input id="signupEmail" type="email" class="input-field" style = "color: white;" placeholder="you@example.com" autocomplete="email" required />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5" for="signupPassword">Password</label>
+            <div class="relative">
+              <input id="signupPassword" style = "color: white;" type="password" class="input-field pr-10" placeholder="Create a password (min 6 chars)" autocomplete="new-password" required oninput="updateStrength(this.value)" />
+              <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" onclick="togglePasswordVisibility('signupPassword', this)" tabindex="-1">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              </button>
+            </div>
+            <!-- Password strength indicator -->
+            <div class="mt-2 flex gap-1">
+              <div id="sb1" class="strength-bar flex-1 bg-gray-200 dark:bg-gray-700"></div>
+              <div id="sb2" class="strength-bar flex-1 bg-gray-200 dark:bg-gray-700"></div>
+              <div id="sb3" class="strength-bar flex-1 bg-gray-200 dark:bg-gray-700"></div>
+              <div id="sb4" class="strength-bar flex-1 bg-gray-200 dark:bg-gray-700"></div>
+            </div>
+            <p id="strengthLabel" class="text-xs text-gray-400 mt-1"></p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5" for="signupConfirm">Confirm password</label>
+            <div class="relative">
+              <input id="signupConfirm" type="password" class="input-field pr-10" style = "color: white;" placeholder="Repeat your password" autocomplete="new-password" required />
+              <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" onclick="togglePasswordVisibility('signupConfirm', this)" tabindex="-1">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              </button>
+            </div>
+          </div>
+          <p id="signupError" class="text-sm text-error hidden"></p>
+          <button type="submit" class="w-full py-2.5 rounded-btn bg-primary text-white font-semibold hover:opacity-90 transition btn-primary mt-2">
+            Create Account
+          </button>
+          <p class="text-xs text-center text-gray-400">By creating an account you agree to our <a href="#" class="text-primary hover:underline">Terms of Service</a>.</p>
+        </form>
+
+      </div>
+
+      <!-- Footer link -->
+      <p class="text-center text-sm text-gray-500 mt-6">
+        <a href="index.html" class="hover:text-primary transition">← Back to home</a>
+      </p>
+    </div>
+  </main>
+
+  <script>
+    // ============================================
+    // Theme
+    // ============================================
+    (function() {
+      const t = localStorage.getItem('mf_theme') || 'light';
+      document.body.setAttribute('data-theme', t);
+      if (t === 'dark') { document.body.classList.add('dark'); document.documentElement.classList.add('dark'); }
+    })();
+
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const body = document.body;
+      const next = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      body.setAttribute('data-theme', next);
+      if (next === 'dark') {
+        body.classList.add('dark'); document.documentElement.classList.add('dark');
+        document.getElementById('themeIcon').innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />';
+      } else {
+        body.classList.remove('dark'); document.documentElement.classList.remove('dark');
+        document.getElementById('themeIcon').innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.66-10.66h-1M4.34 12.34h-1M18.36 18.36l-.7-.7M6.34 6.34l-.7-.7M18.36 5.64l-.7.7M6.34 17.66l-.7.7M12 8a4 4 0 100 8 4 4 0 000-8z" />';
+      }
+      localStorage.setItem('mf_theme', next);
+    });
+
+    // ============================================
+    // Redirect if already logged in
+    // ============================================
+    if (localStorage.getItem('mf_currentUser')) {
+      window.location.href = 'dashboard.html';
+    }
+
+    // ============================================
+    // Tab switching
+    // ============================================
+    let currentTab = 'signin';
+
+    function switchTab(tab) {
+      currentTab = tab;
+      const signinForm = document.getElementById('signinForm');
+      const signupForm = document.getElementById('signupForm');
+      const tabSignIn = document.getElementById('tabSignIn');
+      const tabSignUp = document.getElementById('tabSignUp');
+      const title = document.getElementById('pageTitle');
+      const subtitle = document.getElementById('pageSubtitle');
+
+      if (tab === 'signin') {
+        signinForm.classList.remove('hidden');
+        signupForm.classList.add('hidden');
+        tabSignIn.className = 'flex-1 py-2 text-sm font-semibold rounded-md bg-white dark:bg-gray-700 text-primary shadow-sm transition';
+        tabSignUp.className = 'flex-1 py-2 text-sm font-semibold rounded-md text-gray-500 dark:text-gray-400 transition hover:text-gray-700 dark:hover:text-gray-200';
+        title.textContent = 'Welcome back';
+        subtitle.textContent = 'Sign in to your MathFlow account';
+      } else {
+        signinForm.classList.add('hidden');
+        signupForm.classList.remove('hidden');
+        tabSignIn.className = 'flex-1 py-2 text-sm font-semibold rounded-md text-gray-500 dark:text-gray-400 transition hover:text-gray-700 dark:hover:text-gray-200';
+        tabSignUp.className = 'flex-1 py-2 text-sm font-semibold rounded-md bg-white dark:bg-gray-700 text-primary shadow-sm transition';
+        title.textContent = 'Create your account';
+        subtitle.textContent = 'Join thousands of students on MathFlow';
+      }
+    }
+
+    // ============================================
+    // Password visibility toggle
+    // ============================================
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      const isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+      btn.innerHTML = isPassword
+        ? '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/></svg>'
+        : '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>';
+    }
+
+    // ============================================
+    // Password strength meter
+    // ============================================
+    function updateStrength(password) {
+      let score = 0;
+      if (password.length >= 6) score++;
+      if (password.length >= 10) score++;
+      if (/[A-Z]/.test(password) && /[a-z]/.test(password)) score++;
+      if (/[0-9!@#$%^&*]/.test(password)) score++;
+
+      const bars = ['sb1','sb2','sb3','sb4'];
+      const colors = ['bg-error','bg-warning','bg-accent','bg-success'];
+      const labels = ['','Weak','Fair','Good','Strong'];
+
+      bars.forEach((id, i) => {
+        const el = document.getElementById(id);
+        if (i < score) {
+          el.className = `strength-bar flex-1 ${colors[score - 1]}`;
+        } else {
+          el.className = 'strength-bar flex-1 bg-gray-200 dark:bg-gray-700';
+        }
+      });
+      document.getElementById('strengthLabel').textContent = password.length > 0 ? labels[score] : '';
+    }
+
+    // ============================================
+    // SHA-256 hashing
+    // ============================================
+    async function hashPassword(password) {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(password));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // ============================================
+    // Account helpers
+    // ============================================
+    function getAccounts() {
+      return JSON.parse(localStorage.getItem('mf_accounts') || '[]');
+    }
+
+    function saveAccounts(accounts) {
+      localStorage.setItem('mf_accounts', JSON.stringify(accounts));
+    }
+
+    function showError(id, msg) {
+      const el = document.getElementById(id);
+      el.textContent = msg;
+      el.classList.remove('hidden');
+    }
+
+    function clearError(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    // ============================================
+    // Sign In
+    // ============================================
+    document.getElementById('signinForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearError('signinError');
+
+      const email = document.getElementById('signinEmail').value.trim().toLowerCase();
+      const password = document.getElementById('signinPassword').value;
+
+      if (!email || !password) {
+        showError('signinError', 'Please fill in all fields.');
+        return;
+      }
+
+      const accounts = getAccounts();
+      const account = accounts.find(a => a.email === email);
+
+      if (!account) {
+        showError('signinError', 'No account found with that email. Please create an account.');
+        return;
+      }
+
+      const hash = await hashPassword(password);
+      if (hash !== account.passwordHash) {
+        showError('signinError', 'Incorrect password. Please try again.');
+        return;
+      }
+
+      localStorage.setItem('mf_currentUser', email);
+      window.location.href = 'dashboard.html';
+    });
+
+    // ============================================
+    // Sign Up
+    // ============================================
+    document.getElementById('signupForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearError('signupError');
+
+      const name = document.getElementById('signupName').value.trim();
+      const email = document.getElementById('signupEmail').value.trim().toLowerCase();
+      const password = document.getElementById('signupPassword').value;
+      const confirm = document.getElementById('signupConfirm').value;
+
+      if (!name || !email || !password || !confirm) {
+        showError('signupError', 'Please fill in all fields.');
+        return;
+      }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showError('signupError', 'Please enter a valid email address.');
+        return;
+      }
+
+      if (password.length < 6) {
+        showError('signupError', 'Password must be at least 6 characters.');
+        return;
+      }
+
+      if (password !== confirm) {
+        showError('signupError', 'Passwords do not match.');
+        return;
+      }
+
+      const accounts = getAccounts();
+      if (accounts.find(a => a.email === email)) {
+        showError('signupError', 'An account with that email already exists. Please sign in.');
+        return;
+      }
+
+      const passwordHash = await hashPassword(password);
+
+      // Create account
+      accounts.push({ name, email, passwordHash, createdAt: new Date().toISOString() });
+      saveAccounts(accounts);
+
+      // Initialize per-user data with fresh defaults
+      const userData = {
+        name,
+        email,
+        notifications: [],
+        registeredSessions: [],
+        completedLessons: [],
+        savedResources: [],
+        progress: { algebra: 0, geometry: 0, precalc: 0 },
+        activity: []
+      };
+      localStorage.setItem(`mf_userdata_${email}`, JSON.stringify(userData));
+
+      // Log in automatically
+      localStorage.setItem('mf_currentUser', email);
+      window.location.href = 'dashboard.html';
+    });
+  </script>
+</body>
+</html>

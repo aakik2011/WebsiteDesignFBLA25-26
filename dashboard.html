@@ -344,6 +344,7 @@
   </footer>
 
   <script src="shared.js"></script>
+  <script>requireAuth();</script>
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -381,17 +382,22 @@
     document.getElementById('timeGreeting').textContent = greeting;
 
     // ---- Storage keys ----
+    const _dashEmail = localStorage.getItem('mf_currentUser') || 'guest';
     const KEYS = {
-      profile: 'mf_profile',
-      time: 'mf_total_seconds',
-      streak: 'mf_streak',
-      sessions: 'mf_sessions',
-      points: 'mf_points',
-      activity: 'mf_activity'
+      profile: `mf_profile_${_dashEmail}`,
+      time: `mf_total_seconds_${_dashEmail}`,
+      streak: `mf_streak_${_dashEmail}`,
+      sessions: `mf_sessions_${_dashEmail}`,
+      points: `mf_points_${_dashEmail}`,
+      activity: `mf_activity_${_dashEmail}`
     };
 
     // ---- State ----
-    let profile = JSON.parse(localStorage.getItem(KEYS.profile) || '{"name":"Student","initials":"?"}');
+    const _accts = JSON.parse(localStorage.getItem('mf_accounts') || '[]');
+    const _acct = _accts.find(a => a.email === _dashEmail) || {};
+    const _defaultInitials = (_acct.name || 'ST').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    const _defaultProfile = JSON.stringify({ name: _acct.name || 'Student', initials: _defaultInitials });
+    let profile = JSON.parse(localStorage.getItem(KEYS.profile) || _defaultProfile);
     let totalSeconds = parseInt(localStorage.getItem(KEYS.time) || '0');
     let streak = JSON.parse(localStorage.getItem(KEYS.streak) || '{"count":0,"lastDate":""}');
     let sessions = parseInt(localStorage.getItem(KEYS.sessions) || '0');

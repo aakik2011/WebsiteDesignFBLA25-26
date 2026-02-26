@@ -1,6 +1,70 @@
 // MathFlow - Shared JavaScript functionality
 
 // ============================================
+// Auth Management
+// ============================================
+function getAccounts() {
+  return JSON.parse(localStorage.getItem('mf_accounts') || '[]');
+}
+
+function getCurrentUser() {
+  const email = localStorage.getItem('mf_currentUser');
+  if (!email) return null;
+  return getAccounts().find(a => a.email === email) || null;
+}
+
+function getUserData(email) {
+  return JSON.parse(localStorage.getItem(`mf_userdata_${email}`) || '{}');
+}
+
+function saveUserData(email, data) {
+  localStorage.setItem(`mf_userdata_${email}`, JSON.stringify(data));
+}
+
+function requireAuth() {
+  if (!localStorage.getItem('mf_currentUser')) {
+    window.location.href = 'login.html';
+  }
+}
+
+function logout() {
+  localStorage.removeItem('mf_currentUser');
+  window.location.href = 'login.html';
+}
+
+function updateNavForAuth() {
+  const user = getCurrentUser();
+  const rightDiv = document.querySelector('header .flex.h-16 > div:last-child');
+  if (!rightDiv) return;
+
+  // Remove existing Dashboard link from right div if present
+  const dashLink = rightDiv.querySelector('a[href="dashboard.html"]');
+
+  if (user) {
+    if (dashLink) dashLink.remove();
+    const initials = user.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    const userChip = document.createElement('div');
+    userChip.className = 'flex items-center gap-2';
+    userChip.innerHTML = `
+      <a href="dashboard.html" class="flex items-center gap-2 px-3 py-1.5 rounded-btn bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+        <div class="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-xs font-bold">${initials}</div>
+        <span class="text-sm font-medium text-gray-700 dark:text-gray-300 hidden sm:block">${user.name.split(' ')[0]}</span>
+      </a>
+      <button onclick="logout()" class="px-3 py-1.5 rounded-btn border border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+        Sign Out
+      </button>
+    `;
+    rightDiv.appendChild(userChip);
+  } else {
+    // Replace Dashboard link with Sign In
+    if (dashLink) {
+      dashLink.href = 'login.html';
+      dashLink.textContent = 'Sign In';
+    }
+  }
+}
+
+// ============================================
 // Theme Management
 // ============================================
 function initTheme() {
@@ -114,24 +178,34 @@ function updateNotificationBadge(count) {
 // ============================================
 // User State Management
 // ============================================
-const userState = {
-  name: localStorage.getItem('mf_userName') || 'Alex',
-  email: localStorage.getItem('mf_userEmail') || 'alex@mathflow.edu',
-  notifications: JSON.parse(localStorage.getItem('mf_notifications') || '[]'),
-  registeredSessions: new Set(JSON.parse(localStorage.getItem('mf_registered') || '[]')),
-  completedLessons: JSON.parse(localStorage.getItem('mf_completedLessons') || '[]'),
-  savedResources: JSON.parse(localStorage.getItem('mf_savedResources') || '[]'),
-  progress: JSON.parse(localStorage.getItem('mf_progress') || '{"algebra": 75, "geometry": 45, "precalc": 30}')
-};
+(function initUserState() {
+  const email = localStorage.getItem('mf_currentUser');
+  const account = email ? (getAccounts().find(a => a.email === email) || {}) : {};
+  const stored = email ? getUserData(email) : {};
+
+  window.userState = {
+    name: account.name || stored.name || 'Student',
+    email: email || stored.email || '',
+    notifications: stored.notifications || [],
+    registeredSessions: new Set(stored.registeredSessions || []),
+    completedLessons: stored.completedLessons || [],
+    savedResources: stored.savedResources || [],
+    progress: stored.progress || { algebra: 0, geometry: 0, precalc: 0 }
+  };
+})();
 
 function saveUserState() {
-  localStorage.setItem('mf_userName', userState.name);
-  localStorage.setItem('mf_userEmail', userState.email);
-  localStorage.setItem('mf_notifications', JSON.stringify(userState.notifications));
-  localStorage.setItem('mf_registered', JSON.stringify(Array.from(userState.registeredSessions)));
-  localStorage.setItem('mf_completedLessons', JSON.stringify(userState.completedLessons));
-  localStorage.setItem('mf_savedResources', JSON.stringify(userState.savedResources));
-  localStorage.setItem('mf_progress', JSON.stringify(userState.progress));
+  const email = localStorage.getItem('mf_currentUser');
+  if (!email) return;
+  saveUserData(email, {
+    name: userState.name,
+    email: userState.email,
+    notifications: userState.notifications,
+    registeredSessions: Array.from(userState.registeredSessions),
+    completedLessons: userState.completedLessons,
+    savedResources: userState.savedResources,
+    progress: userState.progress
+  });
 }
 
 // ============================================
@@ -297,8 +371,10 @@ const ACTIVITY_ICONS = {
 };
 
 function logActivity(type, text) {
+  const email = localStorage.getItem('mf_currentUser');
+  const activityKey = email ? `mf_activity_${email}` : 'mf_activity';
   const MAX_ITEMS = 30;
-  const existing = JSON.parse(localStorage.getItem('mf_activity') || '[]');
+  const existing = JSON.parse(localStorage.getItem(activityKey) || '[]');
   const entry = {
     id: Date.now(),
     type: type || 'default',
@@ -306,7 +382,7 @@ function logActivity(type, text) {
     timestamp: new Date().toISOString()
   };
   const updated = [entry, ...existing].slice(0, MAX_ITEMS);
-  localStorage.setItem('mf_activity', JSON.stringify(updated));
+  localStorage.setItem(activityKey, JSON.stringify(updated));
   // Dispatch event for same-tab listeners
   window.dispatchEvent(new CustomEvent('mf_activity_updated', { detail: updated }));
 }
@@ -481,6 +557,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSearch();
   highlightCurrentNav();
   injectMobileNav();
+  updateNavForAuth();
 
   // Set current year in footer
   const yearEl = document.getElementById('year');
