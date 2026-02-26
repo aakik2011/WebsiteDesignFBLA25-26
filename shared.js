@@ -38,11 +38,9 @@ function updateNavForAuth() {
   const nav = document.querySelector('header nav[aria-label="Primary"]');
   if (!rightDiv) return;
 
-  // Remove any existing nav auth elements to avoid duplicates (including hardcoded Sign In links)
-  rightDiv.querySelector('a[href="dashboard.html"]')?.remove();
-  rightDiv.querySelector('#editProfile')?.remove();
-  rightDiv.querySelector('[data-nav-auth]')?.remove();
-  rightDiv.querySelector('a[href="login.html"]')?.remove();
+  // Remove ALL existing auth elements (handles duplicates and every page's hardcoded variant)
+  rightDiv.querySelectorAll('a[href="dashboard.html"], a[href="login.html"], #editProfile, [data-nav-auth]')
+    .forEach(el => el.remove());
 
   // Add/remove Dashboard link in nav bar based on auth state
   if (nav) {
