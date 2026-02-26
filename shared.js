@@ -35,12 +35,32 @@ function logout() {
 function updateNavForAuth() {
   const user = getCurrentUser();
   const rightDiv = document.querySelector('header .flex.h-16 > div:last-child');
+  const nav = document.querySelector('header nav[aria-label="Primary"]');
   if (!rightDiv) return;
 
-  // Remove any existing nav auth elements to avoid duplicates
+  // Remove any existing nav auth elements to avoid duplicates (including hardcoded Sign In links)
   rightDiv.querySelector('a[href="dashboard.html"]')?.remove();
   rightDiv.querySelector('#editProfile')?.remove();
   rightDiv.querySelector('[data-nav-auth]')?.remove();
+  rightDiv.querySelector('a[href="login.html"]')?.remove();
+
+  // Add/remove Dashboard link in nav bar based on auth state
+  if (nav) {
+    const existingDashLink = nav.querySelector('a[href="dashboard.html"]');
+    if (user && !existingDashLink) {
+      const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+      const isActive = currentPage === 'dashboard.html';
+      const dashLink = document.createElement('a');
+      dashLink.href = 'dashboard.html';
+      dashLink.className = isActive
+        ? 'px-3 py-2 text-sm rounded-md bg-gray-100 dark:bg-gray-800 text-primary'
+        : 'px-3 py-2 text-sm rounded-md text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800';
+      dashLink.textContent = 'Dashboard';
+      nav.appendChild(dashLink);
+    } else if (!user && existingDashLink) {
+      existingDashLink.remove();
+    }
+  }
 
   const chip = document.createElement('div');
   chip.setAttribute('data-nav-auth', '1');
@@ -559,8 +579,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initMobileMenu();
   initSearch();
   highlightCurrentNav();
-  injectMobileNav();
   updateNavForAuth();
+  injectMobileNav();
 
   // Set current year in footer
   const yearEl = document.getElementById('year');
