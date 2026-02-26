@@ -37,31 +37,34 @@ function updateNavForAuth() {
   const rightDiv = document.querySelector('header .flex.h-16 > div:last-child');
   if (!rightDiv) return;
 
-  // Remove existing Dashboard link from right div if present
-  const dashLink = rightDiv.querySelector('a[href="dashboard.html"]');
+  // Remove any existing nav auth elements to avoid duplicates
+  rightDiv.querySelector('a[href="dashboard.html"]')?.remove();
+  rightDiv.querySelector('#editProfile')?.remove();
+  rightDiv.querySelector('[data-nav-auth]')?.remove();
+
+  const chip = document.createElement('div');
+  chip.setAttribute('data-nav-auth', '1');
+  chip.className = 'flex items-center gap-2';
 
   if (user) {
-    if (dashLink) dashLink.remove();
     const initials = user.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-    const userChip = document.createElement('div');
-    userChip.className = 'flex items-center gap-2';
-    userChip.innerHTML = `
-      <a href="dashboard.html" class="flex items-center gap-2 px-3 py-1.5 rounded-btn bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition">
-        <div class="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-xs font-bold">${initials}</div>
-        <span class="text-sm font-medium text-gray-700 dark:text-gray-300 hidden sm:block">${user.name.split(' ')[0]}</span>
+    chip.innerHTML = `
+      <a href="dashboard.html" title="${user.name}" class="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-xs font-bold hover:opacity-80 transition">
+        ${initials}
       </a>
-      <button onclick="logout()" class="px-3 py-1.5 rounded-btn border border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
-        Sign Out
+      <button onclick="logout()" title="Sign out" class="p-1.5 rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-200 transition" aria-label="Sign out">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+        </svg>
       </button>
     `;
-    rightDiv.appendChild(userChip);
   } else {
-    // Replace Dashboard link with Sign In
-    if (dashLink) {
-      dashLink.href = 'login.html';
-      dashLink.textContent = 'Sign In';
-    }
+    chip.innerHTML = `
+      <a href="login.html" class="px-4 py-2 rounded-btn bg-primary text-white text-sm font-medium hover:opacity-90 transition">Sign In</a>
+    `;
   }
+
+  rightDiv.appendChild(chip);
 }
 
 // ============================================

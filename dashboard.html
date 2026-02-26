@@ -490,7 +490,7 @@
       profileModal.classList.add('hidden');
     }
 
-    document.getElementById('editProfile').addEventListener('click', openProfileModal);
+    document.getElementById('editProfile')?.addEventListener('click', openProfileModal);
     document.getElementById('editProfileBtn').addEventListener('click', openProfileModal);
     document.getElementById('cancelProfile').addEventListener('click', closeProfileModal);
 
