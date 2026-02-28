@@ -14,6 +14,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
           colors: {
@@ -66,7 +67,7 @@
     .strength-bar { height: 4px; border-radius: 2px; transition: width 0.3s, background 0.3s; }
   </style>
 </head>
-<body class="antialiased bg-bgLight text-gray-900" data-theme="light">
+<body class="antialiased bg-bgLight dark:bg-bgDark text-gray-900 dark:text-textPrimaryDark" data-theme="light">
 
   <!-- Header -->
   <header class="sticky top-0 z-40 backdrop-blur bg-white/80 dark:bg-black/80 border-b border-gray-100 dark:border-gray-800">

@@ -13,6 +13,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
           colors: {
@@ -40,7 +41,7 @@
   </script>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="antialiased bg-bgLight text-textPrimaryLight" data-theme="light">
+<body class="antialiased bg-bgLight dark:bg-bgDark text-textPrimaryLight dark:text-textPrimaryDark" data-theme="light">
   <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:bg-white focus:px-3 focus:py-2 focus:rounded-md">Skip to content</a>
 
   <!-- Navigation -->
@@ -51,8 +52,8 @@
           <a href="index.html" class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-heading">M</div>
             <div class="hidden sm:block">
-              <span class="block font-heading text-lg"><p style="color:white;">MathFlow</p></span>
-              <span class="text-sm text-gray-500"><p style="color:white;">Design to Learn</p></span>
+              <span class="block font-heading text-lg">MathFlow</span>
+              <span class="text-sm text-gray-500">Design to Learn</span>
             </div>
           </a>
           <nav class="hidden md:flex gap-2 ml-6" aria-label="Primary">
@@ -112,13 +113,13 @@
 
           <!-- Calendar Grid -->
           <div class="grid grid-cols-7 gap-1 mb-2">
-            <div class="text-center text-md font-medium text-gray-500 py-2"><p style="color:white;">Sun</p></div>
-            <div class="text-center text-md font-medium text-gray-500 py-2"><p style="color:white;">Mon</p></div>
-            <div class="text-center text-md font-medium text-gray-500 py-2"><p style="color:white;">Tue</p></div>
-            <div class="text-center text-md font-medium text-gray-500 py-2"><p style="color:white;">Wed</p></div>
-            <div class="text-center text-md font-medium text-gray-500 py-2"><p style="color:white;">Thu</p></div>
-            <div class="text-center text-md font-medium text-gray-500 py-2"><p style="color:white;">Fri</p></div>
-            <div class="text-center text-md font-medium text-gray-500 py-2"><p style="color:white;">Sat</p></div>
+            <div class="text-center text-md font-medium text-gray-500 py-2">Sun</div>
+            <div class="text-center text-md font-medium text-gray-500 py-2">Mon</div>
+            <div class="text-center text-md font-medium text-gray-500 py-2">Tue</div>
+            <div class="text-center text-md font-medium text-gray-500 py-2">Wed</div>
+            <div class="text-center text-md font-medium text-gray-500 py-2">Thu</div>
+            <div class="text-center text-md font-medium text-gray-500 py-2">Fri</div>
+            <div class="text-center text-md font-medium text-gray-500 py-2">Sat</div>
           </div>
           <div id="calendarGrid" class="grid grid-cols-7 gap-1"></div>
 
@@ -128,19 +129,19 @@
             <div class="flex flex-wrap gap-4 text-sm">
               <div class="flex items-center gap-2">
                 <div class="w-3 h-3 rounded-full bg-primary shadow-lg shadow-primary/50"></div>
-                <span class="font-medium"><p style="color:white;">Algebra</p></span>
+                <span class="font-medium">Algebra</span>
               </div>
               <div class="flex items-center gap-2">
                 <div class="w-3 h-3 rounded-full bg-secondary shadow-lg shadow-secondary/50"></div>
-                <span class="font-medium"><p style="color:white;">Geometry</p></span>
+                <span class="font-medium">Geometry</span>
               </div>
               <div class="flex items-center gap-2">
                 <div class="w-3 h-3 rounded-full bg-accent shadow-lg shadow-accent/50"></div>
-                <span class="font-medium"><p style="color:white;">Pre-Calculus</p></span>
+                <span class="font-medium">Pre-Calculus</span>
               </div>
               <div class="flex items-center gap-2">
                 <div class="w-3 h-3 rounded-full bg-success shadow-lg shadow-success/50"></div>
-                <span class="font-medium"><p style="color:white;">Study Group</p></span>
+                <span class="font-medium">Study Group</span>
               </div>
             </div>
           </div>
@@ -150,7 +151,7 @@
         <div class="mt-6 bg-cardLight dark:bg-cardDark rounded-2xl shadow-2xl p-6 border border-gray-100 dark:border-gray-800">
           <div class="flex items-center justify-between mb-6">
             <div>
-              <h2 class="text-xl font-heading font-semibold"><p style="color:white;">Available Sessions</p></h2>
+              <h2 class="text-xl font-heading font-semibold">Available Sessions</h2>
               <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Join a session and start learning</p>
             </div>
             <div class="flex gap-2">
@@ -200,7 +201,7 @@
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 border border-gray-100 dark:border-gray-800">
           <h3 class="font-semibold mb-4 flex items-center gap-2 text-gray-900 dark:text-white">
             <span class="w-8 h-8 rounded-lg bg-gradient-to-br from-success to-accent text-white flex items-center justify-center text-sm">✓</span>
-            <p style="color:white;">My Registered Sessions</p>
+            My Registered Sessions
           </h3>
           <ul id="mySessionsList" class="space-y-3">
             <li class="text-center text-gray-500 py-4 text-sm">No registered sessions yet</li>
@@ -246,7 +247,7 @@
   <div id="createModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 p-4">
     <div class="w-full max-w-xl bg-cardLight dark:bg-cardDark rounded-card shadow-xl p-6 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-heading font-semibold"><p style="color:white;">Create Study Session</p></h3>
+        <h3 class="text-lg font-heading font-semibold">Create Study Session</h3>
         <button type="button" id="closeModal" class="text-gray-500 hover:text-gray-700 p-1" aria-label="Close modal">
           <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -255,12 +256,12 @@
       </div>
       <form id="createSessionForm" class="space-y-4">
         <div>
-          <label class="block text-sm font-medium mb-1" for="sessionTitle"><p style="color:white;">Session Title</p></label>
+          <label class="block text-sm font-medium mb-1" for="sessionTitle">Session Title</label>
           <input type="text" id="sessionTitle" required class="w-full px-3 py-2 rounded-btn border focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="e.g., Quadratic Equations Review">
         </div>
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm font-medium mb-1" for="sessionSubject"><p style="color:white;">Subject</p></label>
+            <label class="block text-sm font-medium mb-1" for="sessionSubject">Subject</label>
             <select id="sessionSubject" class="w-full px-3 py-2 rounded-btn border bg-white  focus:ring-2 focus:ring-primary/20 focus:border-primary">
               <option value="algebra">Algebra</option>
               <option value="geometry">Geometry</option>
@@ -268,7 +269,7 @@
             </select>
           </div>
           <div>
-            <label class="block text-sm font-medium mb-1" for="sessionDifficulty"><p style="color:white;">Difficulty</p></label>
+            <label class="block text-sm font-medium mb-1" for="sessionDifficulty">Difficulty</label>
             <select id="sessionDifficulty" class="w-full px-3 py-2 rounded-btn border bg-white  focus:ring-2 focus:ring-primary/20 focus:border-primary">
               <option value="beginner">Beginner</option>
               <option value="intermediate">Intermediate</option>
@@ -278,17 +279,17 @@
         </div>
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm font-medium mb-1" for="sessionDate"><p style="color:white;">Date</p></label>
+            <label class="block text-sm font-medium mb-1" for="sessionDate">Date</label>
             <input type="date" id="sessionDate" required class="w-full px-3 py-2 rounded-btn border bg-white  focus:ring-2 focus:ring-primary/20 focus:border-primary">
           </div>
           <div>
-            <label class="block text-sm font-medium mb-1" for="sessionTime"><p style="color:white;">Time</p></label>
+            <label class="block text-sm font-medium mb-1" for="sessionTime">Time</label>
             <input type="time" id="sessionTime" required class="w-full px-3 py-2 rounded-btn border bg-white  focus:ring-2 focus:ring-primary/20 focus:border-primary">
           </div>
         </div>
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm font-medium mb-1" for="sessionDuration"><p style="color:white;">Duration (minutes)</p></label>
+            <label class="block text-sm font-medium mb-1" for="sessionDuration">Duration (minutes)</label>
             <select id="sessionDuration" class="w-full px-3 py-2 rounded-btn border bg-white  focus:ring-2 focus:ring-primary/20 focus:border-primary">
               <option value="30">30 minutes</option>
               <option value="45">45 minutes</option>
@@ -297,17 +298,17 @@
             </select>
           </div>
           <div>
-            <label class="block text-sm font-medium mb-1" for="sessionMax"><p style="color:white;">Max Participants</p></label>
+            <label class="block text-sm font-medium mb-1" for="sessionMax">Max Participants</label>
             <input type="number" id="sessionMax" min="2" max="20" value="10" class="w-full px-3 py-2 rounded-btn border bg-white  focus:ring-2 focus:ring-primary/20 focus:border-primary">
           </div>
         </div>
         <div>
-          <label class="block text-sm font-medium mb-1" for="sessionDesc"><p style="color:white;">Description</p></label>
+          <label class="block text-sm font-medium mb-1" for="sessionDesc">Description</label>
           <textarea id="sessionDesc" rows="3" class="w-full px-3 py-2 rounded-btn border bg-white  focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="What will be covered in this session?"></textarea>
         </div>
         <div class="flex items-center gap-2">
           <input type="checkbox" id="sessionRecurring" class="rounded">
-          <label for="sessionRecurring" class="text-sm"><p style="color:white;">Make this a recurring weekly session</p></label>
+          <label for="sessionRecurring" class="text-sm">Make this a recurring weekly session</label>
         </div>
         <div class="flex justify-end gap-3 pt-4">
           <button type="button" id="cancelCreate" class="px-4 py-2 rounded-btn bg-primary text-white hover:opacity-90">Cancel</button>
@@ -556,7 +557,7 @@
           <li class="p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50">
             <div class="flex items-center gap-2">
               <div class="w-2 h-2 rounded-full ${subjectColors[s.subject]}"></div>
-              <span class="font-medium text-sm" <p style="color:white;">${s.title}</span>
+              <span class="font-medium text-sm text-gray-900 dark:text-gray-100">${s.title}</span>
             </div>
             <p class="text-xs text-gray-500 mt-1">${dateStr} at ${timeStr}</p>
           </li>
@@ -603,7 +604,7 @@
                 return `
                   <div class="text-sm flex items-center gap-2">
                     <div class="w-1.5 h-1.5 rounded-full flex-shrink-0 ${subjectColors[s.subject]}"></div>
-                    <span class="truncate" style="color: white">${s.title}</span>
+                    <span class="truncate">${s.title}</span>
                     <span class="text-xs flex-shrink-0" style="color: rgba(255,255,255,0.6)">${timeStr}</span>
                   </div>`;
               }).join('')}

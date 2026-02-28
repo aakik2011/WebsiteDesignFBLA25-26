@@ -13,6 +13,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
           colors: {
@@ -44,7 +45,7 @@
   </style>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="antialiased bg-bgLight text-textPrimaryLight" data-theme="light">
+<body class="antialiased bg-bgLight dark:bg-bgDark text-textPrimaryLight dark:text-textPrimaryDark" data-theme="light">
   <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:bg-white focus:px-3 focus:py-2 focus:rounded-md">Skip to content</a>
 
   <!-- Navigation -->
@@ -55,8 +56,8 @@
           <a href="index.html" class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-heading">M</div>
             <div class="hidden sm:block">
-              <span class="block font-heading text-lg"><p style="color:white;">MathFlow</p></span>
-              <span class="text-sm text-gray-500"><p style="color:white;">Design to Learn</p></span>
+              <span class="block font-heading text-lg">MathFlow</span>
+              <span class="text-sm text-gray-500">Design to Learn</span>
             </div>
           </a>
           <nav class="hidden md:flex gap-2 ml-6" aria-label="Primary">

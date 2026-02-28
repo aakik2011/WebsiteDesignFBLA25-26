@@ -14,6 +14,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
           colors: {
@@ -47,7 +48,7 @@
   </script>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="antialiased bg-bgLight text-textPrimaryLight" data-theme="light">
+<body class="antialiased bg-bgLight dark:bg-bgDark text-textPrimaryLight dark:text-textPrimaryDark" data-theme="light">
   <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:bg-white focus:px-3 focus:py-2 focus:rounded-md">Skip to content</a>
 
   <!-- Navigation -->
@@ -359,6 +360,7 @@
         const next = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
         setTheme(next);
       });
+      themeToggle.dataset.mfInited = '1';
       function setTheme(t) {
         body.setAttribute('data-theme', t);
         const themeIcon = document.querySelector('#themeIcon');

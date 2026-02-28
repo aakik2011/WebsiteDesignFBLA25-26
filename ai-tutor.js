@@ -182,7 +182,7 @@ function renderChatHistory() {
 
   welcomeDiv.innerHTML = `
     <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center text-lg flex-shrink-0">🤖</div>
-    <div class="flex-1 bg-gray-100  rounded-lg p-4 max-w-[85%]">
+    <div class="flex-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-4 max-w-[85%] text-gray-900 dark:text-gray-100">
       <p class="text-sm">
         <strong>Hello! I'm your Google Gemini AI tutor (${aiSettings.model}).</strong><br><br>
         I can help you with math problems, explain concepts, provide step-by-step solutions, and answer your questions. What would you like to learn today?
@@ -218,7 +218,7 @@ function addMessageToUI(role, content, save = true) {
     messageDiv.className = 'flex items-start gap-3';
     messageDiv.innerHTML = `
       <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center text-lg flex-shrink-0">🤖</div>
-      <div class="flex-1 bg-gray-100 rounded-lg p-4 max-w-[85%]">
+      <div class="flex-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-4 max-w-[85%] text-gray-900 dark:text-gray-100">
         <p class="text-sm whitespace-pre-wrap">${escapeHtml(content)}</p>
       </div>
     `;
