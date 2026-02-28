@@ -45,6 +45,7 @@
     }
   </script>
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body class="antialiased bg-bgLight text-textPrimaryLight" data-theme="light">
   <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:bg-white focus:px-3 focus:py-2 focus:rounded-md">Skip to content</a>
@@ -225,18 +226,47 @@
           </div>
         </div>
 
-        <!-- Recent Activity -->
+        <!-- Activity Chart -->
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 p-6">
-          <h2 class="text-lg font-heading font-semibold text-gray-900 dark:text-white mb-5">Recent Activity</h2>
-          <div id="activityList">
-            <div class="flex flex-col items-center justify-center py-12 text-gray-400">
-              <svg class="w-12 h-12 mb-3 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-              </svg>
-              <p class="text-sm font-medium">No activity yet</p>
-              <p class="text-xs mt-1 opacity-70">Start studying to see your progress here</p>
+          <div class="flex items-center justify-between mb-5">
+            <h2 class="text-lg font-heading font-semibold text-gray-900 dark:text-white">Activity Overview</h2>
+            <div class="flex gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1 text-xs">
+              <button id="chartView7d"  class="px-2.5 py-1 rounded-md bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm font-medium transition" onclick="setChartRange(7)">7d</button>
+              <button id="chartView14d" class="px-2.5 py-1 rounded-md text-gray-500 dark:text-gray-400 font-medium transition hover:text-gray-700 dark:hover:text-gray-200" onclick="setChartRange(14)">14d</button>
+              <button id="chartView30d" class="px-2.5 py-1 rounded-md text-gray-500 dark:text-gray-400 font-medium transition hover:text-gray-700 dark:hover:text-gray-200" onclick="setChartRange(30)">30d</button>
             </div>
           </div>
+
+          <!-- Summary pills -->
+          <div class="grid grid-cols-3 gap-3 mb-5">
+            <div class="bg-primary/5 dark:bg-primary/10 rounded-xl p-3 text-center">
+              <div class="text-xl font-bold text-primary" id="chartTotalActivities">0</div>
+              <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Total Activities</div>
+            </div>
+            <div class="bg-success/5 dark:bg-success/10 rounded-xl p-3 text-center">
+              <div class="text-xl font-bold text-success" id="chartActiveDays">0</div>
+              <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Active Days</div>
+            </div>
+            <div class="bg-warning/5 dark:bg-warning/10 rounded-xl p-3 text-center">
+              <div class="text-xl font-bold text-warning" id="chartBestDay">—</div>
+              <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Best Day</div>
+            </div>
+          </div>
+
+          <!-- Chart canvas -->
+          <div class="relative" style="height:210px" id="activityChartWrap">
+            <canvas id="activityChart"></canvas>
+            <div id="chartEmptyState" class="absolute inset-0 flex flex-col items-center justify-center text-gray-400">
+              <svg class="w-10 h-10 mb-2 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+              <p class="text-sm font-medium">No activity yet</p>
+              <p class="text-xs mt-1 opacity-70">Start studying to see your progress</p>
+            </div>
+          </div>
+
+          <!-- Type legend -->
+          <div class="flex flex-wrap gap-3 mt-4 pt-4 border-t border-gray-100 dark:border-gray-700" id="activityLegend"></div>
         </div>
 
       </div>
@@ -410,6 +440,7 @@
     setTheme(theme);
     themeToggle.addEventListener('click', () => {
       setTheme(bodyEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+      if (activityChart) renderActivity();
     });
     themeToggle.dataset.mfInited = '1';
 
@@ -508,9 +539,11 @@
       document.getElementById('sessionsDisplay').textContent = sessions;
       document.getElementById('pointsDisplay').textContent = points;
       document.getElementById('userName').textContent = profile.name;
-      document.getElementById('profileName').textContent = profile.name;
+      const _pnEl = document.getElementById('profileName');
+      if (_pnEl) _pnEl.textContent = profile.name;
       document.getElementById('profileDisplayName').textContent = profile.name;
-      document.getElementById('userInitials').textContent = profile.initials;
+      const _uiEl = document.getElementById('userInitials');
+      if (_uiEl) _uiEl.textContent = profile.initials;
       document.getElementById('profileInitials').textContent = profile.initials;
     }
 
@@ -662,52 +695,152 @@
       lofiAudio.volume = e.target.value / 100;
     });
 
-    // ---- Activity Rendering ----
-    const COLOR_MAP = {
-      primary:   'bg-primary/10 text-primary',
-      secondary: 'bg-secondary/10 text-secondary',
-      accent:    'bg-accent/10 text-accent',
-      success:   'bg-success/10 text-success',
-      warning:   'bg-warning/10 text-warning',
-      error:     'bg-error/10 text-error'
+    // ---- Activity Chart ----
+    const ACTIVITY_COLORS = {
+      lesson:  { bg: 'rgba(99,102,241,0.75)',  border: '#6366f1', label: 'Lessons'  },
+      session: { bg: 'rgba(139,92,246,0.75)',  border: '#8b5cf6', label: 'Sessions' },
+      time:    { bg: 'rgba(6,182,212,0.75)',   border: '#06b6d4', label: 'Time'     },
+      points:  { bg: 'rgba(245,158,11,0.75)',  border: '#f59e0b', label: 'Points'   },
+      streak:  { bg: 'rgba(16,185,129,0.75)',  border: '#10b981', label: 'Streaks'  },
+      profile: { bg: 'rgba(107,114,128,0.75)', border: '#6b7280', label: 'Profile'  },
+      music:   { bg: 'rgba(236,72,153,0.75)',  border: '#ec4899', label: 'Music'    },
     };
+    const DEFAULT_ACOLOR = { bg: 'rgba(99,102,241,0.75)', border: '#6366f1', label: 'Other' };
+
+    let activityChart = null;
+    let chartRange = 7;
+
+    function setChartRange(days) {
+      chartRange = days;
+      [7, 14, 30].forEach(d => {
+        const btn = document.getElementById(`chartView${d}d`);
+        if (!btn) return;
+        if (d === days) {
+          btn.className = 'px-2.5 py-1 rounded-md bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm font-medium transition';
+        } else {
+          btn.className = 'px-2.5 py-1 rounded-md text-gray-500 dark:text-gray-400 font-medium transition hover:text-gray-700 dark:hover:text-gray-200';
+        }
+      });
+      renderActivity();
+    }
+
+    function getDaysArray(numDays) {
+      return Array.from({ length: numDays }, (_, i) => {
+        const d = new Date();
+        d.setDate(d.getDate() - (numDays - 1 - i));
+        d.setHours(0, 0, 0, 0);
+        return new Date(d);
+      });
+    }
 
     function renderActivity() {
-      const list = document.getElementById('activityList');
       const stored = JSON.parse(localStorage.getItem(KEYS.activity) || '[]');
       activity = stored;
 
-      if (!stored.length) {
-        list.innerHTML = `
-          <div class="flex flex-col items-center justify-center py-12 text-gray-400">
-            <svg class="w-12 h-12 mb-3 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-            </svg>
-            <p class="text-sm font-medium">No activity yet</p>
-            <p class="text-xs mt-1 opacity-70">Start studying to see your progress here</p>
-          </div>`;
-        return;
-      }
+      const days = getDaysArray(chartRange);
+      const dayLabels = days.map(d =>
+        chartRange <= 7
+          ? d.toLocaleDateString('en-US', { weekday: 'short' })
+          : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      );
 
-      list.innerHTML = stored.slice(0, 15).map(item => {
-        const meta = getActivityMeta(item.type);
-        const colorClass = COLOR_MAP[meta.color] || COLOR_MAP.primary;
-        return `
-          <div class="flex items-start gap-3 py-3 border-b border-gray-100 dark:border-gray-700 last:border-0 activity-item" data-id="${item.id}">
-            <div class="w-9 h-9 rounded-xl flex items-center justify-center text-base shrink-0 ${colorClass}">
-              ${meta.emoji}
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm text-gray-800 dark:text-gray-200 leading-snug">${item.text}</p>
-              <p class="text-xs text-gray-400 mt-0.5 activity-ts" data-ts="${item.timestamp}">${timeAgo(item.timestamp)}</p>
-            </div>
-          </div>`;
+      const presentTypes = [...new Set(stored.map(a => a.type))].filter(t => ACTIVITY_COLORS[t] || true);
+      const typeOrder = ['lesson', 'session', 'time', 'points', 'streak', 'music', 'profile'];
+      const sortedTypes = [
+        ...typeOrder.filter(t => presentTypes.includes(t)),
+        ...presentTypes.filter(t => !typeOrder.includes(t))
+      ];
+
+      const datasets = sortedTypes.map(type => {
+        const c = ACTIVITY_COLORS[type] || DEFAULT_ACOLOR;
+        return {
+          label: c.label,
+          data: days.map(day => {
+            const next = new Date(day); next.setDate(next.getDate() + 1);
+            return stored.filter(a => { const ts = new Date(a.timestamp); return a.type === type && ts >= day && ts < next; }).length;
+          }),
+          backgroundColor: c.bg,
+          borderColor: c.border,
+          borderWidth: 1,
+          borderRadius: 5,
+          borderSkipped: false,
+        };
+      });
+
+      // Summary stats
+      const totalActivities = stored.length;
+      const activeDays = new Set(stored.map(a => new Date(a.timestamp).toDateString())).size;
+      const dayCounts = days.map((day, i) => {
+        const next = new Date(day); next.setDate(next.getDate() + 1);
+        return { label: dayLabels[i], count: stored.filter(a => { const ts = new Date(a.timestamp); return ts >= day && ts < next; }).length };
+      });
+      const best = dayCounts.reduce((b, c) => c.count > b.count ? c : b, { count: 0, label: '—' });
+
+      document.getElementById('chartTotalActivities').textContent = totalActivities;
+      document.getElementById('chartActiveDays').textContent = activeDays;
+      document.getElementById('chartBestDay').textContent = best.count > 0 ? best.label : '—';
+
+      const isEmpty = totalActivities === 0;
+      document.getElementById('chartEmptyState').classList.toggle('hidden', !isEmpty);
+      document.getElementById('activityChart').style.display = isEmpty ? 'none' : 'block';
+
+      // Legend
+      const legendEl = document.getElementById('activityLegend');
+      legendEl.innerHTML = sortedTypes.filter(t => stored.some(a => a.type === t)).map(type => {
+        const c = ACTIVITY_COLORS[type] || DEFAULT_ACOLOR;
+        return `<div class="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400">
+          <span class="w-2.5 h-2.5 rounded-sm flex-shrink-0" style="background:${c.border}"></span>${c.label}
+        </div>`;
       }).join('');
-    }
 
-    function refreshTimestamps() {
-      document.querySelectorAll('.activity-ts[data-ts]').forEach(el => {
-        el.textContent = timeAgo(el.dataset.ts);
+      if (activityChart) { activityChart.destroy(); activityChart = null; }
+      if (isEmpty) return;
+
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      const gridColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
+      const tickColor = isDark ? '#9ca3af' : '#6b7280';
+
+      const ctx = document.getElementById('activityChart').getContext('2d');
+      activityChart = new Chart(ctx, {
+        type: 'bar',
+        data: { labels: dayLabels, datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: isDark ? '#1f2937' : '#ffffff',
+              titleColor: isDark ? '#f9fafb' : '#111827',
+              bodyColor: isDark ? '#d1d5db' : '#374151',
+              borderColor: isDark ? '#374151' : '#e5e7eb',
+              borderWidth: 1,
+              padding: 12,
+              callbacks: {
+                title: items => items[0].label,
+                beforeBody: items => {
+                  const total = items.reduce((s, i) => s + i.parsed.y, 0);
+                  return total === 1 ? '1 activity' : `${total} activities`;
+                },
+                label: () => null,
+                afterBody: items => {
+                  const dayIdx = items[0].dataIndex;
+                  const day = days[dayIdx];
+                  const next = new Date(day); next.setDate(next.getDate() + 1);
+                  const dayActs = stored.filter(a => { const ts = new Date(a.timestamp); return ts >= day && ts < next; });
+                  if (!dayActs.length) return [];
+                  return dayActs.slice(0, 5).map(a => `• ${a.text.length > 45 ? a.text.slice(0,42) + '…' : a.text}`);
+                }
+              }
+            }
+          },
+          scales: {
+            x: { stacked: true, grid: { display: false }, ticks: { color: tickColor, font: { size: 11 } }, border: { display: false } },
+            y: { stacked: true, beginAtZero: true, ticks: { color: tickColor, font: { size: 11 }, precision: 0, stepSize: 1 }, grid: { color: gridColor }, border: { display: false } }
+          },
+          animation: { duration: 500, easing: 'easeInOutQuart' },
+          interaction: { mode: 'index', intersect: false }
+        }
       });
     }
 
@@ -822,8 +955,8 @@
     renderActivity();
     logStreakIfNew();
 
-    // Refresh relative timestamps every minute
-    setInterval(refreshTimestamps, 60000);
+    // Refresh chart every 60 seconds for real-time feel
+    setInterval(renderActivity, 60000);
 </script>
 </body>
 </html>
