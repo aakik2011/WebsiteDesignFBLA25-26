@@ -1,5 +1,5 @@
 // ADD YOUR GOOGLE GEMINI API KEY HERE
-const GEMINI_API_KEY = 'AIzaSyC9Vp6Nn2oByRM-aZz4O92QQC7o2s4go_8';
+const GEMINI_API_KEY = '';
 
 const _aiEmail = localStorage.getItem('mf_currentUser') || 'guest';
 const AI_SETTINGS_KEY = `mf_ai_settings_${_aiEmail}`;
@@ -132,14 +132,7 @@ document.getElementById('aiSettingsForm').addEventListener('submit', (e) => {
 // FIRST-TIME SETUP
 // ========================================
 
-// Start chat button
-document.getElementById('startChatBtn').addEventListener('click', () => {
-  localStorage.setItem(AI_CONFIGURED_KEY, 'true');
-  closeModal('aiWelcomeModal');
-  saveAISettings();
-  updateModeIndicator();
-  renderChatHistory();
-});
+// (Welcome modal removed)
 
 // ========================================
 // CLEAR CHAT
@@ -360,7 +353,7 @@ async function getGeminiResponse(message) {
         temperature: 0.7,
         topK: 40,
         topP: 0.95,
-        maxOutputTokens: 1000
+        maxOutputTokens: 8192
       }
     })
   });
@@ -412,10 +405,4 @@ initTheme();
 loadAISettings();
 updateModeIndicator();
 
-// Check if this is first time
-const hasConfigured = localStorage.getItem(AI_CONFIGURED_KEY);
-if (!hasConfigured) {
-  openModal('aiWelcomeModal');
-} else {
-  renderChatHistory();
-}
+renderChatHistory();

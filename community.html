@@ -904,6 +904,12 @@
     renderGroups();
     renderLeaderboard();
     renderOnlineUsers();
+
+    // Deep-link: switch to tutors tab if URL hash is #tutors
+    if (window.location.hash === '#tutors') {
+      const tutorTab = document.querySelector('.community-tab[data-tab="tutors"]');
+      if (tutorTab) tutorTab.click();
+    }
   </script>
 </body>
 </html>

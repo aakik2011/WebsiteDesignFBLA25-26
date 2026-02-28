@@ -412,7 +412,7 @@
         if (entry.isIntersecting && !animated) {
           animated = true;
           stats.forEach(stat => {
-            animateValue(stat.el, 0, stat.target, 2000, stat.suffix);
+            animateValue(stat.el, 0, stat.target, 4000, stat.suffix);
           });
         }
       });
@@ -421,14 +421,14 @@
     observer.observe(document.getElementById('stat1').parentElement.parentElement);
 
     function animateValue(el, start, end, duration, suffix) {
-      const range = end - start;
-      const increment = end > start ? 1 : -1;
-      const stepTime = Math.abs(Math.floor(duration / range));
+      const steps = 80;
+      const stepTime = Math.floor(duration / steps);
+      const increment = Math.ceil((end - start) / steps);
       let current = start;
 
       const timer = setInterval(() => {
-        current += increment * Math.ceil(range / 100);
-        if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+        current += increment;
+        if (current >= end) {
           el.textContent = end.toLocaleString() + suffix;
           clearInterval(timer);
         } else {
