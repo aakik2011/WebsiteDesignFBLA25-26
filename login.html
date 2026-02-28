@@ -49,7 +49,7 @@
       outline: none;
       transition: border-color 0.15s, box-shadow 0.15s;
       background: transparent;
-      color: inherit;
+      color: #111827;
     }
     .input-field:focus {
       border-color: #6366f1;
@@ -97,8 +97,8 @@
       <!-- Logo / Title -->
       <div class="text-center mb-8 fade-in">
         <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-heading font-bold text-2xl mx-auto mb-4">M</div>
-        <h1 class="text-2xl font-heading font-bold text-gray-900 dark:text-white" id="pageTitle"><p style="color: black;">Welcome back</p></h1>
-        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400" id="pageSubtitle"><p style="color: black;">Sign in to your MathFlow account</p></p>
+        <h1 class="text-2xl font-heading font-bold text-gray-900 dark:text-white" id="pageTitle">Welcome back</h1>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400" id="pageSubtitle">Sign in to your MathFlow account</p>
       </div>
 
       <!-- Card -->
@@ -114,14 +114,14 @@
         <form id="signinForm" class="form-panel space-y-4" novalidate>
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5" for="signinEmail">Email address</label>
-            <input id="signinEmail" type="email" class="input-field" style = "color: white;" placeholder="you@example.com" autocomplete="email" required />
+            <input id="signinEmail" type="email" class="input-field" placeholder="you@example.com" autocomplete="email" required />
           </div>
           <div>
             <div class="flex items-center justify-between mb-1.5">
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="signinPassword">Password</label>
             </div>
             <div class="relative">
-              <input id="signinPassword" type="password" class="input-field pr-10" style = "color: white;" placeholder="Enter your password" autocomplete="current-password" required />
+              <input id="signinPassword" type="password" class="input-field pr-10" placeholder="Enter your password" autocomplete="current-password" required />
               <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" onclick="togglePasswordVisibility('signinPassword', this)" tabindex="-1">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
               </button>
@@ -137,16 +137,16 @@
         <form id="signupForm" class="form-panel space-y-4 hidden" novalidate>
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5" for="signupName">Full name</label>
-            <input id="signupName" style = "color: white;" type="text" class="input-field" placeholder="Alex Johnson" autocomplete="name" required />
+            <input id="signupName" type="text" class="input-field" placeholder="Alex Johnson" autocomplete="name" required />
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5" for="signupEmail">Email address</label>
-            <input id="signupEmail" type="email" class="input-field" style = "color: white;" placeholder="you@example.com" autocomplete="email" required />
+            <input id="signupEmail" type="email" class="input-field" placeholder="you@example.com" autocomplete="email" required />
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5" for="signupPassword">Password</label>
             <div class="relative">
-              <input id="signupPassword" style = "color: white;" type="password" class="input-field pr-10" placeholder="Create a password (min 6 chars)" autocomplete="new-password" required oninput="updateStrength(this.value)" />
+              <input id="signupPassword" type="password" class="input-field pr-10" placeholder="Create a password (min 6 chars)" autocomplete="new-password" required oninput="updateStrength(this.value)" />
               <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" onclick="togglePasswordVisibility('signupPassword', this)" tabindex="-1">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
               </button>
@@ -163,7 +163,7 @@
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5" for="signupConfirm">Confirm password</label>
             <div class="relative">
-              <input id="signupConfirm" type="password" class="input-field pr-10" style = "color: white;" placeholder="Repeat your password" autocomplete="new-password" required />
+              <input id="signupConfirm" type="password" class="input-field pr-10" placeholder="Repeat your password" autocomplete="new-password" required />
               <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" onclick="togglePasswordVisibility('signupConfirm', this)" tabindex="-1">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
               </button>
@@ -187,12 +187,17 @@
 
   <script>
     // ============================================
-    // Theme
+    // Theme + Dyslexic Font (early init)
     // ============================================
     (function() {
       const t = localStorage.getItem('mf_theme') || 'light';
       document.body.setAttribute('data-theme', t);
       if (t === 'dark') { document.body.classList.add('dark'); document.documentElement.classList.add('dark'); }
+
+      if (localStorage.getItem('mf_dyslexic') === 'true') {
+        document.body.classList.add('dyslexic');
+        document.documentElement.classList.add('dyslexic');
+      }
     })();
 
     document.getElementById('themeToggle').addEventListener('click', () => {

@@ -86,6 +86,41 @@ function updateNavForAuth() {
 }
 
 // ============================================
+// Dyslexic Font Management
+// ============================================
+function initDyslexicFont() {
+  const enabled = localStorage.getItem('mf_dyslexic') === 'true';
+  if (enabled) {
+    document.body.classList.add('dyslexic');
+    document.documentElement.classList.add('dyslexic');
+  } else {
+    document.body.classList.remove('dyslexic');
+    document.documentElement.classList.remove('dyslexic');
+  }
+  // Sync toggle button state if present
+  const btn = document.getElementById('dyslexicToggle');
+  const badge = document.getElementById('dyslexicBadge');
+  if (btn) {
+    btn.setAttribute('aria-pressed', enabled ? 'true' : 'false');
+  }
+  if (badge) {
+    badge.textContent = enabled ? 'On' : 'Off';
+    badge.className = enabled
+      ? 'text-xs px-2 py-0.5 rounded-full bg-primary/20 text-primary font-medium'
+      : 'text-xs px-2 py-0.5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400';
+  }
+}
+
+function toggleDyslexicFont() {
+  const enabled = localStorage.getItem('mf_dyslexic') === 'true';
+  const next = !enabled;
+  document.body.classList.toggle('dyslexic', next);
+  document.documentElement.classList.toggle('dyslexic', next);
+  localStorage.setItem('mf_dyslexic', next.toString());
+  initDyslexicFont();
+}
+
+// ============================================
 // Theme Management
 // ============================================
 function initTheme() {
@@ -573,6 +608,7 @@ function highlightCurrentNav() {
 // Initialize on DOM Ready
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
+  initDyslexicFont();
   initTheme();
   initMobileMenu();
   initSearch();

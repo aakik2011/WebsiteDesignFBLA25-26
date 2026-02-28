@@ -1,5 +1,17 @@
 /* MathFlow - Shared Styles */
 
+/* OpenDyslexic font for accessibility */
+@import url('https://fonts.cdnfonts.com/css/opendyslexic');
+
+/* Dyslexic-friendly font mode */
+body.dyslexic,
+body.dyslexic * {
+  font-family: 'OpenDyslexic', 'Comic Sans MS', 'Verdana', sans-serif !important;
+  letter-spacing: 0.05em;
+  word-spacing: 0.1em;
+  line-height: 1.6;
+}
+
 /* Base transitions and focus styles */
 :root { color-scheme: light; }
 [data-theme="dark"] { color-scheme: dark; }
@@ -344,4 +356,34 @@
 .dark input::placeholder,
 .dark textarea::placeholder {
   color: #6b7280;
+}
+
+/* ==============================================
+   INPUT FIELD LIGHT MODE — ensure text is visible
+   ============================================== */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="submit"]):not([type="button"]),
+textarea,
+select {
+  color: #111827;
+}
+
+[data-theme="dark"] input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="submit"]):not([type="button"]),
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+  color: #f9fafb;
+}
+
+/* ==============================================
+   CHEAT SHEET MODAL — light mode text fix
+   ============================================== */
+[data-theme="light"] #docContent [class*="text-white"] {
+  color: #1f2937 !important;
+}
+
+[data-theme="light"] #docContent [class*="bg-white"] {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] #docContent [class*="border-white"] {
+  border-color: rgba(0, 0, 0, 0.12) !important;
 }

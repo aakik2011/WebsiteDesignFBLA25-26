@@ -314,6 +314,10 @@
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 p-6">
           <h3 class="font-heading font-semibold text-gray-900 dark:text-white mb-4">Settings</h3>
           <div class="space-y-1">
+            <button type="button" id="dyslexicToggle" aria-pressed="false" onclick="toggleDyslexicFont()" class="w-full text-left px-3 py-2.5 rounded-xl text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition flex items-center justify-between">
+              <span>Dyslexic-Friendly Font</span>
+              <span id="dyslexicBadge" class="text-xs px-2 py-0.5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400">Off</span>
+            </button>
             <button type="button" id="changePasswordBtn" class="w-full text-left px-3 py-2.5 rounded-xl text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
               Change Password
             </button>
